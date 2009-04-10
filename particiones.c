@@ -6,7 +6,7 @@ Tparticiones* crearParticiones(const char* nombre){
      TP->nombre = (char*)malloc(strlen(nombre));
      strcpy(TP->nombre, nombre);
      TP->cantidad = 0;
-     ls_crear(&particiones, sizeof(Tarch*));
+     ls_Crear(&TP->particiones, sizeof(Tarch));
      return TP;
 }
 
@@ -28,7 +28,7 @@ Tarch* obtenerParticion(Tparticiones* TP){
      if(TP != NULL){
 	  if(!ls_Vacia(TP->particiones)){
 	       ls_MoverCorriente(&TP->particiones, LS_PRIMERO);
-	       ls_ElemCorriente(&TP->particiones, TA);
+	       ls_ElemCorriente(TP->particiones, &TA);
 	       ls_BorrarCorriente(&TP->particiones);
 	       TP->cantidad--;
 	  }

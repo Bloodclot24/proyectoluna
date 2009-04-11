@@ -11,6 +11,8 @@ void merge(Tparticiones *Gparticion){
   char* Eof= (char*) malloc(sizeof(char)*n);
   unsigned int nEof= 0;
   Tarch *archFinal= Fopen("archivoFinal", "w");
+
+  palabraAComparar = (char*)malloc(n*sizeof(char*));
   
   for(i=0; i<cantidad; i++)
   		archivo[i]=  obtenerParticion(Gparticion);

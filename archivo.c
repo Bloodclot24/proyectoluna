@@ -15,6 +15,14 @@ Tarch* Fopen(const char* nombre, const char* modo){
      return archivo;
 }
 
+int Feof(Tarch* archivo){
+     if(archivo != NULL){
+	  if(archivo->fd != NULL)
+	       return feof(archivo->fd);
+	  
+     }     
+}
+
 void Fclose(Tarch* archivo){
      if(archivo != NULL){
 	  if(archivo->fd != NULL)

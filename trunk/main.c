@@ -4,12 +4,9 @@
 
 int main(){
   Tparticiones* particion;
-  
   Tarch* archivo; 
-  archivo= Fopen("part2.txt","r");
-  
+
   particion= crearParticiones("nombrearchivo");
-  agregarParticion(particion,archivo);
   
 //  printf("Agrego\n");
   
@@ -24,6 +21,9 @@ int main(){
   
   
   archivo = Fopen("part1.txt","r");
+  agregarParticion(particion,archivo);
+
+  archivo= Fopen("part2.txt","r");
   agregarParticion(particion,archivo);
   
   archivo = Fopen("part3.txt","r");

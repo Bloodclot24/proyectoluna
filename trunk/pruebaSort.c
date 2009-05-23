@@ -1,11 +1,16 @@
 #include "archivo.h"
+#include "particiones.h"
 #include "ReplacementSelection.h"
 
 int main(int argc, char** argv){
 
      Tarch *archivo = Fopen("pruebasort.lst","r");
 
-     ReplacementSelection(archivo, 5);
+     Tparticiones *TP = ReplacementSelection(archivo, 10);
+
+     eliminarParticiones(TP);
+
+     Fclose(archivo);
 
 
 }

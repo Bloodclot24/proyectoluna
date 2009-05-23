@@ -1,35 +1,27 @@
 #include "particiones.h"
 
 Tparticiones* crearParticiones(const char* nombre){
-     Tparticiones *TP = (Tparticiones*)malloc(sizeof(Tparticiones));
+     Tparticiones *TP = NULL;
      TP = (Tparticiones*)malloc(sizeof(Tparticiones));
      TP->nombre = (char*)malloc(strlen(nombre));
      strcpy(TP->nombre, nombre);
      TP->cantidad = 0;
-     ls_Crear(&TP->particiones, sizeof(Tarch));
+     TP->listaParticiones = Lista_Crear();
      return TP;
 }
 
 void agregarParticion(Tparticiones* TP, Tarch* TA){
      if(TP != NULL && TA != NULL){
-	  TMovimiento_Ls modo = LS_SIGUIENTE;
-	  if(ls_Vacia(TP->particiones))
-	       modo = LS_PRIMERO;
-	  ls_Insertar(&TP->particiones, modo, (void*)TA);
+	  Lista_Insertar(TP->listaParticiones, (void*)TA);
 	  TP->cantidad++;
      }
 }
 
-/*
- * Obtiene la primera particion y la elimina de la lista.
- */
 Tarch* obtenerParticion(Tparticiones* TP){
      Tarch* TA=NULL;
      if(TP != NULL){
-	  if(!ls_Vacia(TP->particiones)){
-	       ls_MoverCorriente(&TP->particiones, LS_PRIMERO);
-	       ls_ElemCorriente(TP->particiones, &TA);
-	       ls_BorrarCorriente(&TP->particiones);
+	  if(!Lista_EstaVacia(TP->listaParticiones)){
+	       TA = Lista_RemoverPrimero(TP->listaParticiones);
 	       TP->cantidad--;
 	  }
      }
@@ -46,6 +38,7 @@ void eliminarParticiones(Tparticiones* TP){
 		    Fclose(TA);
 	       }
 	  }
+	  Lista_Liberar(TP->listaParticiones);
 	  free(TP->nombre);
 	  free(TP);
      }

@@ -4,9 +4,9 @@
 
 int main(int argc, char** argv){
 
-     Tarch *archivo = Fopen("pruebasort.lst","r");
+     Tarch *archivo = Fopen("salida","r");
 
-     Tparticiones *TP = ReplacementSelection(archivo, 10);
+     Tparticiones *TP = ReplacementSelection(archivo, 1000);
 
      eliminarParticiones(TP);
 

@@ -27,7 +27,7 @@ Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
      /* Lleno el arbol hasta la cantidad dada */
      while(palabrasAlmacenadas <= palabrasMaximas){
 	  char* linea;
-	  FreadLn(archivo,&linea);
+	  FreadLn(archivo,(void**)&linea);
 	  /* Obtengo el termino y lo agrego al arbol */
 	  rb_insert(miArbol, linea);
 	  palabrasAlmacenadas++;
@@ -57,48 +57,49 @@ Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
 	  char* ultimaPalabra = "\0";
 	  char* palabra = NULL;
 	  
-	  /* TODO (Guido): ver si si no existe el archivo, lo crea*/
-	  /* Lucas: supongo que si */
-	  
-	  /* creo elnombre del archivo destino */
+	  /* creo el nombre del archivo destino */
 	  char contador[3];
 	  sprintf(contador, "%03d", contadorArchivo);
 	  strcpy(nombreArchivo, archivo->nombre);
 	  strncat(nombreArchivo, contador, 3);
+
+	  /* Incremento el contador, asi el proximo archivo tiene un
+	   * nombre diferente */
 	  contadorArchivo++;
+
 	  /* Creo el archivo */
 	  Tarch *archivoDestino = Fopen(nombreArchivo,"w");
 	  
 	  /* Obtengo el termino---> lo guardo en la particion destino */
 	  while((palabra = rb_remover_mayor_igual(miArbol,ultimaPalabra)) != NULL){
 	       Fwrite(archivoDestino, palabra, strlen(palabra));
-	       
+	       palabrasAlmacenadas--;
+
 	       /* Obtengo otro termino y lo agrego al arbol */
 	       if(!Feof(archivo)){
+
 		    char* linea;
-		    FreadLn(archivo,&linea);
+		    FreadLn(archivo,(void**)&linea);
 		    rb_insert(miArbol, linea);
+		    palabrasAlmacenadas++;
 	       }
 	       
-	       //char *auxiliar = ultimaPalabra;
+	       char *auxiliar = ultimaPalabra;
 	       ultimaPalabra = palabra;
-	       //if(palabra != auxiliar && !primero){
-	       //	    primero = 0;
-	       //	    free(auxiliar);
-	       // }
+	       if(palabra != auxiliar && !primero){
+	       	    free(auxiliar);
+	       }
+	       primero = 0;
 	       
 	  }
 	  Fclose(archivoDestino);
-	  /* TODO: IMPORTANTE, con agregar particion explota todo,
-	   * seguramente esta pisando memoria que no le corresponde
-	   * (esta pisando memoria que no le corresponde). URGENTE->
-	   * Conseguir una lista que no pise memoria */
-	  //agregarParticion(&particiones,&archivoDestino);
-	  /* incrementar variable entero que va al nombre del archivo */
-	  
+	  if(!primero)
+	       free(ultimaPalabra);
+	  agregarParticion(particiones,archivoDestino);
      }
-     
+
+     rb_destroy(miArbol, NULL);
      free(nombreArchivo);
      
-     return NULL;
+     return particiones;
 }

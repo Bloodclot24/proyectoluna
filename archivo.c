@@ -15,14 +15,6 @@ Tarch* Fopen(const char* nombre, const char* modo){
      return archivo;
 }
 
-int Feof(Tarch* archivo){
-     if(archivo != NULL){
-	  if(archivo->fd != NULL)
-	       return feof(archivo->fd);
-	  
-     }     
-}
-
 void Fclose(Tarch* archivo){
      if(archivo != NULL){
 	  if(archivo->fd != NULL)
@@ -33,11 +25,12 @@ void Fclose(Tarch* archivo){
      }
 }
 
-void Frewind(Tarch* archivo){
+int Feof(Tarch* archivo){
      if(archivo != NULL){
 	  if(archivo->fd != NULL)
-	       rewind(archivo->fd);
-     }
+	       return feof(archivo->fd);
+	  
+     }     
 }
 
 void Fwrite(Tarch *archivo, void* datos, size_t tam){
@@ -59,7 +52,7 @@ void FreadLn(Tarch *archivo, void** datos){
   char* linea=(char*)malloc(sizeof(char)*CANTIDAD_A_ALOCAR);
   char* lineaAux = linea;
   
-  if(archivo != NULL) {
+  if(archivo != NULL){
 	  if(fgets(lineaAux,CANTIDAD_A_ALOCAR,archivo->fd)!=NULL){
 	    while((linea[strlen(linea)-1]!='\n')&&(lineaAux!=NULL)){
 	      if((lineaAux=realloc(linea,strlen(linea)*2))!=NULL){
@@ -72,6 +65,13 @@ void FreadLn(Tarch *archivo, void** datos){
 	  *datos = linea;
   }
 } 
+
+void Frewind(Tarch* archivo){
+     if(archivo != NULL){
+	  if(archivo->fd != NULL)
+	       rewind(archivo->fd);
+     }
+}
 
 void Funlink(Tarch* archivo){
   if(archivo != NULL){

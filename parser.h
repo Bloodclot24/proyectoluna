@@ -1,8 +1,8 @@
 #ifndef PARSER_H_INCLUDED
 #define PARSER_H_INCLUDED
 
-//#include "particiones.h"
-//#include "archivo.h"
+#include "particiones.h"
+#include "archivo.h"
 
 #include "pila.h"
 #include "debug.h"
@@ -127,7 +127,7 @@ Parser* Parser_Crear(const char* nombre, int tamanioPromedio, int particiones){
 	  parser->tamanioActual = 0;
 	  parser->particiones = particiones;
 	  parser->SAXhandler = &SAXhandlerDefault;
-	  // TODO: no va a compilar
+
 	  parser->archivoActual = Fopen(parser->documentoID, "w");
      }
      return parser;
@@ -155,7 +155,7 @@ Parser* Parser_Crear(const char* nombre, int tamanioPromedio, int particiones){
 	       /* avanzo en el archivo */
 	       int i;
 	       for(i=0;i<bytes;i++)
-		    printf("%c", texto[i]);
+		    printf("%c", tolower(texto[i]));
 	       printf("\n");
 	       
 	       texto+=bytes;

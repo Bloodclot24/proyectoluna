@@ -23,7 +23,7 @@ void merge(Tparticiones *Gparticion){
   //Leo la primer palabra de cada particion de n cantidad de archivos.
   //inicializo el vector Eof[] con flags para saber si el archivo termino.
   for(i=0; i<n; i++) {
-  	if(!feof(archivo[i]->fd)){ 
+  	if(!Feof(archivo[i])){ 
   		FreadLn(archivo[i], (void**)&palabraAComparar[i]);
    		Eof[i]= '0';
   	}
@@ -49,7 +49,7 @@ void merge(Tparticiones *Gparticion){
     }
   	Fwrite(archFinal, menor, strlen(menor));
    
-    if(feof(archivo[posMenor]->fd)) {
+    if(Feof(archivo[posMenor])) {
     	Eof[posMenor]= '1';
       	nEof++;
     }
@@ -59,5 +59,5 @@ void merge(Tparticiones *Gparticion){
   }//fin del while de las n particiones.
   nEof=0;
   }//fin del while de todo el grupo de particiones.
-  
+  //Fclose(archFinal);
 }

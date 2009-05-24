@@ -93,14 +93,13 @@ Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
 	       primero = 0;
 	       
 	  }
-	  Fclose(archivoDestino);
 	  if(!primero)
 	       free(ultimaPalabra);
 	  agregarParticion(particiones,archivoDestino);
      }
 
      rb_destroy(miArbol, NULL);
-     free(nombreArchivo);
+     //free(nombreArchivo);
      
      return particiones;
 }

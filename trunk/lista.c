@@ -52,7 +52,7 @@ void* Lista_RemoverPrimero(Lista* lista){
 	  Nodo_Liberar(nodoAuxiliar);
      }
 
-     return nodoAuxiliar;
+     return elemento;
 }
 
 void Lista_Liberar(Lista* lista){

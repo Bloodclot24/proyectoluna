@@ -23,7 +23,7 @@ int main(){
   archivo = Fopen("part1.txt","r");
   agregarParticion(particion,archivo);
 
-  archivo= Fopen("part2.txt","r");
+  archivo = Fopen("part2.txt","r");
   agregarParticion(particion,archivo);
   
   archivo = Fopen("part3.txt","r");

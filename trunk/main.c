@@ -33,7 +33,7 @@ int main(){
   agregarParticion(particion,archivo);
   
 //  merge(particion);
-  Tarch *archivoFinal = (Tarch*) merge2(particion, 2);
+  Tarch *archivoFinal = (Tarch*) merge2(particion, 3);
 
   Fclose(archivoFinal);
 

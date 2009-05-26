@@ -40,10 +40,10 @@ Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
      Tparticiones* particiones = crearParticiones(nombreGParticion);
      
      free(nombreGParticion);
+
+     int contadorArchivo=0;
+     char* nombreArchivo; /* El nombre del archivo destino */
      
-     char* nombreArchivo = malloc(strlen(archivo->nombre)+strlen("000")+1);
-     
-     int contadorArchivo;
      int continuar = 1;
      
      while(!Feof(archivo) || continuar){
@@ -58,10 +58,7 @@ Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
 	  char* palabra = NULL;
 	  
 	  /* creo el nombre del archivo destino */
-	  char contador[5];
-	  sprintf(contador, "%05d", contadorArchivo);
-	  strcpy(nombreArchivo, archivo->nombre);
-	  strncat(nombreArchivo, contador, 5);
+	  nombreArchivo = strcatint(archivo->nombre, contadorArchivo);
 
 	  /* Incremento el contador, asi el proximo archivo tiene un
 	   * nombre diferente */
@@ -73,7 +70,6 @@ Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
 	  /* Obtengo el termino---> lo guardo en la particion destino */
 	  while((palabra = rb_remover_mayor_igual(miArbol,ultimaPalabra)) != NULL){
 	       Fwrite(archivoDestino, palabra, strlen(palabra));
-//	       printf("%s \n", palabra);
 	       palabrasAlmacenadas--;
 
 	       /* Obtengo otro termino y lo agrego al arbol */
@@ -99,7 +95,6 @@ Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
      }
 
      rb_destroy(miArbol, NULL);
-     //free(nombreArchivo);
      
      return particiones;
 }

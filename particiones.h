@@ -2,6 +2,7 @@
 #define PARTICIONES_H_
 
 #include <stdio.h>
+#include <stdint.h>
 #include "lista.h"
 #include "archivo.h"
 
@@ -23,5 +24,8 @@ Tarch* obtenerParticion(Tparticiones* TP);
 
 /* Elimina todo el grupo de particiones */
 void eliminarParticiones(Tparticiones* TP);
+
+/* Crea un nuevo string con la copia de src y le concatena elnumero num */
+char* strcatint(const char* src, uint16_t num);
 
 #endif /*PARTICIONES_H_*/

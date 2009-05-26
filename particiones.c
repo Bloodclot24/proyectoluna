@@ -3,7 +3,7 @@
 Tparticiones* crearParticiones(const char* nombre){
      Tparticiones *TP = NULL;
      TP = (Tparticiones*)malloc(sizeof(Tparticiones));
-     TP->nombre = (char*)malloc(strlen(nombre));
+     TP->nombre = (char*)malloc(strlen(nombre)+1);
      strcpy(TP->nombre, nombre);
      TP->cantidad = 0;
      TP->listaParticiones = Lista_Crear();
@@ -42,4 +42,16 @@ void eliminarParticiones(Tparticiones* TP){
 	  free(TP->nombre);
 	  free(TP);
      }
+}
+
+
+char* strcatint(const char* src, uint16_t num){
+     #define STRCATINT_DIGITOS 5
+     char contador[STRCATINT_DIGITOS+1];
+     char* nuevoString = malloc(strlen(src)+STRCATINT_DIGITOS+1);
+     sprintf(contador, "%05d", num);
+     contador[STRCATINT_DIGITOS] = '\0';
+     strcpy(nuevoString, src);
+     strcat(nuevoString, contador);
+     return nuevoString;
 }

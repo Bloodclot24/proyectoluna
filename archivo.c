@@ -7,7 +7,7 @@ Tarch* Fopen(const char* nombre, const char* modo){
      FILE* fd = fopen(nombre, modo);
      if(fd != NULL){
 	  archivo = (Tarch*)malloc(sizeof(Tarch));
-	  archivo->nombre = (char*)malloc(strlen(nombre));
+	  archivo->nombre = (char*)malloc(strlen(nombre)+1);
 	  strcpy(archivo->nombre, nombre);
 	  archivo->fd = fd;
      }
@@ -68,14 +68,23 @@ void FreadLn(Tarch *archivo, void** datos){
 
 void Frewind(Tarch* archivo){
      if(archivo != NULL){
-	  if(archivo->fd != NULL)
-	       rewind(archivo->fd);
+	  if(archivo->fd != NULL){
+	       fclose(archivo->fd);
+	       archivo->fd = fopen(archivo->nombre, "rw");
+	       //rewind(archivo->fd);
+	  }
      }
 }
 
 void Funlink(Tarch* archivo){
   if(archivo != NULL){
-    if(archivo->fd != NULL)
-      remove(archivo->nombre);
+       if(archivo->fd != NULL){
+	    fclose(archivo->fd);
+	    remove(archivo->nombre);
+       }
+       if(archivo->nombre != NULL)
+	    free(archivo->nombre);
+       free(archivo);
+
   }
 }

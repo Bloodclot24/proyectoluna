@@ -9,15 +9,9 @@ int main(int argc, char** argv){
 
      Tparticiones *TP = ReplacementSelection(archivo, 10000);
 
-     printf("Listo, merge:\n");
+     printf("Listo, merge de %d particiones con 20 particiones por pasada:\n", TP->cantidad);
 
-     merge(TP);
+     merge2(TP, 20);
 
      printf("Listo\n");
-     
-     eliminarParticiones(TP);
-
-     Fclose(archivo);
-
-
 }

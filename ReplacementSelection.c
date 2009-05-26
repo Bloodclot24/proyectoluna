@@ -91,6 +91,7 @@ Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
 	  }
 	  if(!primero)
 	       free(ultimaPalabra);
+	  Frewind(archivoDestino);
 	  agregarParticion(particiones,archivoDestino);
      }
 

@@ -6,7 +6,7 @@ int main(){
   Tparticiones* particion;
   Tarch* archivo; 
 
-  particion= crearParticiones("nombrearchivo");
+  particion= crearParticiones("PARTICIONPRUEBA");
   
 //  printf("Agrego\n");
   
@@ -32,8 +32,11 @@ int main(){
   archivo = Fopen("part4.txt","r");
   agregarParticion(particion,archivo);
   
-  merge(particion);
-  
+//  merge(particion);
+  Tarch *archivoFinal = (Tarch*) merge2(particion, 2);
+
+  Fclose(archivoFinal);
+
   return(0);
   
 }

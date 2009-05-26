@@ -51,7 +51,7 @@ void* Lista_RemoverPrimero(Lista* lista){
 	  elemento = Nodo_GetElemento(nodoAuxiliar);
 	  Nodo_Liberar(nodoAuxiliar);
      }
-
+     
      return elemento;
 }
 

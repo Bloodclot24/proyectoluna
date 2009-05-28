@@ -105,7 +105,8 @@ rb_probe (struct rb_table *tree, void *item)
     {
       int cmp = tree->rb_compare (item, p->rb_data, tree->rb_param);
       if (cmp == 0){
-	   /* El nodo que quiero insertarya esta repetido */
+	   /* El nodo que quiero insertar ya esta repetido */
+	   free(item);
 	   p->repeticiones++;
 	   return &p->rb_data;
       }

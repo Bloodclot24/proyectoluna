@@ -21,7 +21,7 @@ Tarch* obtenerParticion(Tparticiones* TP){
      Tarch* TA=NULL;
      if(TP != NULL){
 	  if(!Lista_EstaVacia(TP->listaParticiones)){
-	       TA = Lista_RemoverPrimero(TP->listaParticiones);
+	       TA = (Tarch*)Lista_RemoverPrimero(TP->listaParticiones);
 	       TP->cantidad--;
 	  }
      }
@@ -48,7 +48,7 @@ void eliminarParticiones(Tparticiones* TP){
 char* strcatint(const char* src, uint16_t num){
      #define STRCATINT_DIGITOS 5
      char contador[STRCATINT_DIGITOS+1];
-     char* nuevoString = malloc(strlen(src)+STRCATINT_DIGITOS+1);
+     char* nuevoString = (char*)malloc(strlen(src)+STRCATINT_DIGITOS+1);
      sprintf(contador, "%05d", num);
      contador[STRCATINT_DIGITOS] = '\0';
      strcpy(nuevoString, src);

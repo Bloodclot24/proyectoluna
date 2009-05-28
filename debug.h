@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-void Debug_Info(char* string, ...);
+void Debug_Info(const char* string, ...);
 
-void Debug_Warning(char* string, ...);
+void Debug_Warning(const char* string, ...);
 
 #endif /* DEBUG_H_INCLUDED */

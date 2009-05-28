@@ -5,7 +5,7 @@
 Pila* Pila_Crear(void){
 
      Pila *pila=NULL;
-     pila = malloc(sizeof(Pila));
+     pila = (Pila*)malloc(sizeof(Pila));
      if(pila != NULL){
 	  pila->primerElemento = NULL;
 	  pila->ultimoElemento = NULL;

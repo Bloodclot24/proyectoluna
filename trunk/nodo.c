@@ -5,7 +5,7 @@
 Nodo* Nodo_Crear(void *elemento){
      Nodo *nodo=NULL;
 
-     nodo=malloc(sizeof(Nodo));
+     nodo=(Nodo*)malloc(sizeof(Nodo));
      if(nodo != NULL){
 	  nodo->proximoNodo = NULL;
 	  nodo->elemento = elemento;

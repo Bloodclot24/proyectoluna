@@ -1,10 +1,12 @@
 #include "archivo.h"
-
+#include <string.h>
+#include <errno.h>
 
 Tarch* Fopen(const char* nombre, const char* modo){
      Tarch* archivo = NULL;
 
      FILE* fd = fopen(nombre, modo);
+
      if(fd != NULL){
 	  archivo = (Tarch*)malloc(sizeof(Tarch));
 	  archivo->nombre = (char*)malloc(strlen(nombre)+1);
@@ -55,7 +57,7 @@ void FreadLn(Tarch *archivo, void** datos){
   if(archivo != NULL){
 	  if(fgets(lineaAux,CANTIDAD_A_ALOCAR,archivo->fd)!=NULL){
 	    while((linea[strlen(linea)-1]!='\n')&&(lineaAux!=NULL)){
-	      if((lineaAux=realloc(linea,strlen(linea)*2))!=NULL){
+		 if((lineaAux=(char*)realloc(linea,strlen(linea)*2))!=NULL){
 	      	linea= lineaAux; 
 	      	lineaAux+=strlen(lineaAux);
 	      	lineaAux=fgets(lineaAux,CANTIDAD_A_ALOCAR,archivo->fd);

@@ -7,7 +7,7 @@ int main(int argc, char** argv){
 
      Tarch *archivo = Fopen("salida","r");
 
-     Tparticiones *TP = ReplacementSelection(archivo, 10000);
+     Tparticiones *TP = ReplacementSelection(archivo, 100000);
 
      printf("Listo, merge de %d particiones con 20 particiones por pasada:\n", TP->cantidad);
 

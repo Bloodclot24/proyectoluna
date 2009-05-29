@@ -11,7 +11,7 @@ int main(int argc, char** argv){
 
      printf("Listo, merge de %d particiones con 20 particiones por pasada:\n", TP->cantidad);
 
-     merge2(TP, 20);
+     merge2(TP, 10);
 
      printf("Listo\n");
 }

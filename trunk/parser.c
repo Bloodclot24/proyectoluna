@@ -1,7 +1,10 @@
 #define _FILE_OFFSET_BITS 64
 
+#include "rb.h"
 #include "parser.h"
 
+/* Arbol y parametro extra para procesar las stopWords */
+static struct rb_table *stopWords=NULL;
 
 /* */
 /*static Tpart* */ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
@@ -16,31 +19,36 @@
      final = inicio+len;
      
      while(texto < final){
-	  bytes = strcspn(texto, "(){}[]<>| ,;.:\n\'\"*+-/=$#!?\0");
+	  bytes = strcspn(texto, "(){}[]<>| ,;.:\n\'\"*+-/=$#!?\0%\\");
 	  if(bytes == 0) /* no encontro ningun separador, avanzo*/
 	       texto++;
 	  else if(texto+bytes < final){
-	       /* Encontre una palabra, y no terminó el buffer*/
+	       /* Encontre una palabra, y no terminó el buffer */
 	       /* TODO: Guardo la palabra al archivo */
 	       /* avanzo en el archivo */
-	       int i;
 
-	       if(bytes > 3){
-		    for(i=0;i<bytes;i++)
-			 printf("%c", tolower(texto[i]));
+	       char *palabra = (char*) malloc(bytes+1);
+	       int i;
+	       for (i = 0 ; i < bytes; i++)
+		    palabra[i] = tolower(texto[i]);
+	       palabra[bytes] = '\0';
+
+	       /* Si no es una stopWord, la escribimos */
+	       if(rb_find(stopWords, palabra) == NULL){
+		    printf("%s", palabra);
 		    printf("\n");
 	       }
-	       texto+=bytes;
+	       free(palabra);
 	  }
 	  else{
 	       /* se nos termina el buffer y nos quedamos a mitad de
 		* una palabra, guardamos el fragmento para la proxima
 		* vez */
-	       parser->palabraAuxiliar = (char*)malloc(bytes);
-	       strncpy(parser->palabraAuxiliar, texto, bytes);
-	       parser->numAuxiliar = bytes;
- 	       texto += bytes; 
+	       //parser->palabraAuxiliar = (char*)malloc(bytes);
+	       //strncpy(parser->palabraAuxiliar, texto, bytes);
+	       //parser->numAuxiliar = bytes;
 	  }
+	  texto += bytes;
      }
 }
 
@@ -103,7 +111,6 @@ static void Parser_Caracteres(void *data, const xmlChar* ch, int len){
      if(strncmp(nombre, "text", strlen("text")) == 0){
 	  Parser_GuardarLexico(parser, (char*)ch, len);
      }
-     
 }
 
 static xmlEntityPtr Parser_ObtenerEntidad(void *user_data, const xmlChar *name) {
@@ -161,6 +168,11 @@ xmlSAXHandler SAXhandlerDefault = {
      NULL
 };
 
+static int comparador(void* primero, void* segundo, void* datos){
+     if(strlen(primero) == 0 || strlen(segundo) == 0)
+	  return -1;
+     else return strcmp(primero, segundo);
+}
 
 /* Crea un nuevo parser y abre el archivo. Mas que nada inicializa el
  * parser. Devuelve un nuvo parser o NULL si hubo algun error de
@@ -178,8 +190,20 @@ Parser* Parser_Crear(const char* nombre, int tamanioPromedio, int particiones){
 	  parser->tamanioActual = 0;
 	  parser->particiones = particiones;
 	  parser->SAXhandler = &SAXhandlerDefault;
-
 	  //parser->archivoActual = Fopen(parser->nombreArchivo, "r");
+     }
+
+     if(stopWords == NULL){
+	  stopWords = rb_create(comparador, NULL, NULL);
+	  Tarch *archivo = Fopen("stopWords3.dat", "r");
+	  
+	  char *linea;
+	  while(!Feof(archivo)){
+	       FreadLn(archivo, (void**)&linea);
+	       linea[strlen(linea)-1] = '\0';
+	       rb_insert(stopWords, linea);
+	  }
+	  Fclose(archivo);
      }
      return parser;
 }

@@ -61,13 +61,11 @@ void *
 rb_find (const struct rb_table *tree, const void *item)
 {
   const struct rb_node *p;
-  const struct rb_node *anterior;
 
   assert (tree != NULL && item != NULL);
   for (p = tree->rb_root; p != NULL; )
     {
       int cmp = tree->rb_compare (item, p->rb_data, tree->rb_param);
-      anterior = p;
       if (cmp < 0){
         p = p->rb_link[0];
       }

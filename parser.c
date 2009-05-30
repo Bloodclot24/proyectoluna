@@ -3,11 +3,13 @@
 #include "rb.h"
 #include "parser.h"
 
+#define ARCHIVO_STOPWORDS "stopWords3.dat\0"
+
 /* Arbol y parametro extra para procesar las stopWords */
 static struct rb_table *stopWords=NULL;
 
-/* */
-/*static Tpart* */ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
+/* Guarda el lexico en el archivo asociado al parser */
+void Parser_GuardarLexico(Parser* parser, char* texto, int len){
      if(parser == NULL)
 	  return ;
 
@@ -35,8 +37,8 @@ static struct rb_table *stopWords=NULL;
 
 	       /* Si no es una stopWord, la escribimos */
 	       if(rb_find(stopWords, palabra) == NULL){
-		    printf("%s", palabra);
-		    printf("\n");
+		    palabra[bytes]='\n';
+		    Fwrite(parser->archivoActual, palabra, bytes+1);
 	       }
 	       free(palabra);
 	  }
@@ -123,8 +125,10 @@ static xmlEntityPtr Parser_ObtenerEntidad(void *user_data, const xmlChar *name) 
 void Parser_Procesar(Parser* parser){
      Debug_Info("Iniciando el parseo...\n");
      int error;
-     if ((error=xmlSAXUserParseFile(parser->SAXhandler, &parser, parser->nombreArchivo)) >= 0) {
+     if ((error=xmlSAXUserParseFile(parser->SAXhandler, parser, parser->nombreArchivo)) >= 0) {
 	  Debug_Info("Parseo iniciado.\n");
+	  printf("listo\n");
+	  Fclose(parser->archivoActual);
      } else{
 	  error = errno;
 	  Debug_Warning("Algo salio mal.\n");
@@ -184,25 +188,29 @@ Parser* Parser_Crear(const char* nombre, int tamanioPromedio, int particiones){
 	  parser = (Parser*) malloc(sizeof(Parser));
 	  parser->tagActual = pila;
 	  parser->documentoID = 0;
-	  parser->nombreArchivo = (char*)malloc(strlen(nombre));
-	  strcpy(parser->nombreArchivo, nombre);
+ 	  parser->nombreArchivo = (char*)malloc(strlen(nombre)+1); 
+ 	  strcpy(parser->nombreArchivo, nombre);
 	  parser->tamanioPromedio = tamanioPromedio;
 	  parser->tamanioActual = 0;
 	  parser->particiones = particiones;
 	  parser->SAXhandler = &SAXhandlerDefault;
-	  //parser->archivoActual = Fopen(parser->nombreArchivo, "r");
+	  /* Creo el archivo destino del lexico */
+	  parser->archivoActual = Fopen("Lexico", "w"); 
      }
 
+     /* Si no existe el arbol de stopWords, lo creo */
      if(stopWords == NULL){
+	  /* Creo un arbol RB */
 	  stopWords = rb_create(comparador, NULL, NULL);
-	  Tarch *archivo = Fopen("stopWords3.dat", "r");
+	  Tarch *archivo = Fopen(ARCHIVO_STOPWORDS, "r");
 	  
+	  /* Inserto los stopwords */
 	  char *linea;
-	  while(!Feof(archivo)){
-	       FreadLn(archivo, (void**)&linea);
-	       linea[strlen(linea)-1] = '\0';
-	       rb_insert(stopWords, linea);
-	  }
+ 	  while(!Feof(archivo)){ 
+ 	       FreadLn(archivo, (void**)&linea); 
+ 	       linea[strlen(linea)-1] = '\0'; 
+ 	       rb_insert(stopWords, linea); 
+ 	  } 
 	  Fclose(archivo);
      }
      return parser;

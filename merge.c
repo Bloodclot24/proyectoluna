@@ -130,7 +130,7 @@ void parsearRegistro(Tarch* archivo, int* longitud, int* num_termino, int* frecu
 	Fread(archivo, num_termino, sizeof(int));
 	Fread(archivo, frecuencia, sizeof(int));
 	documentos= (int*) malloc(*longitud-8);
-	fread(documentos, *longitud-8, 4, archivo->fd);
+	fread(documentos, *longitud-8, 8, archivo->fd);
 }
 
 Tarch* mergeAuxiliar(Tparticiones *Gparticion, int cantidad){
@@ -155,9 +155,7 @@ Tarch* mergeAuxiliar(Tparticiones *Gparticion, int cantidad){
      Tarch **archivo = (Tarch**)malloc(n*sizeof(Tarch*));
 	 int auxmenor= 0;
      int contador=0;
-	 int frec= 0;
-	 int* documAux;
-	 	 
+	 int* docum_frec;
      Tarch *archFinal;
 
 	//funcion parser
@@ -213,19 +211,24 @@ Tarch* mergeAuxiliar(Tparticiones *Gparticion, int cantidad){
 		    }
 	    }
        
-       if(menor == auxmenor){
-       		frec+= *frecuencia;
-       		//rb_insert_unique(arbol, documentos);
+       if(auxmenor == 0)
+       		auxmenor= menor;
+       
+       if(menor == auxmenor)
+       		//rb_insert_unique_auxs(arbol, documentos);
        		rb_insert(arbol, documentos);
-       } else {
-					
+       else {
 			//tam_arbol= rb_size(arbol);
 			//Fwrite(archFinal, &tam_arbol, sizeof(tam_arbol));
 			Fwrite(archFinal, &auxmenor, sizeof(auxmenor));
-			Fwrite(archFinal, &frec, sizeof(frec));
 									
-			while((documAux= (int*) rb_remover_mayor_igual(arbol, &cero)) != NULL)
-				Fwrite(archFinal, &documAux, sizeof(documAux));
+			//while((docum_frec= (int*) rb_remover_mayor_igual(arbol, &cero)) != NULL) {
+				//Fwrite(archFinal, &docum_frec, sizeof(docum_frec)*2);
+			//}
+			
+			
+			//TODO: se debe insertar el primer distinto al anterior
+			//rb_insert(arbol, documentos);
        }
               
       auxmenor = menor;

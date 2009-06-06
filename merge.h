@@ -3,6 +3,7 @@
 
 #include "archivo.h"
 #include "particiones.h"
+#include "rb.h"
 
 void merge(Tparticiones *Gparticion);
 

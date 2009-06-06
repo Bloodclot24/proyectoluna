@@ -37,8 +37,15 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
 
 	       /* Si no es una stopWord, la escribimos */
 	       if(rb_find(stopWords, palabra) == NULL){
-		    palabra[bytes]='\n';
-		    Fwrite(parser->archivoActual, palabra, bytes+1);
+		    //palabra[bytes]='\n';
+		    int auxiliar = bytes+1;
+		    Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
+		    auxiliar = sizeof(int)*2; //Tamaño del par Doc,Freq
+		    Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
+		    Fwrite(parser->archivoActual, palabra, auxiliar);
+		    auxiliar=1; // frecuencia
+		    Fwrite(parser->archivoActual, &(parser->documentoID), sizeof(parser->documentoID));
+		    Fwrite(parser->archivoActual, &auxiliar, sizeof(auxliar));
 	       }
 	       free(palabra);
 	  }

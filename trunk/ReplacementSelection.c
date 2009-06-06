@@ -12,11 +12,10 @@ int compararCadenas(const void* cadena1, const void* cadena2, const void* parame
      return strcmp((char*)cadena1,(char*)cadena2);
 }
 
-int compararEnteros(const void* n1, const void* n2, const void* parametroExtra){
-	if(n1==n2) return 0;
-	if(n1>n2) return 1;
-	else return -1;
+int compararRegistros(const void* cadena1, const void* cadena2, const void* parametroExtra){
+     return strncmp((char*)cadena1,(char*)cadena2,16);
 }
+
 
 Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
 

@@ -13,7 +13,7 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
      if(parser == NULL)
 	  return ;
 
-     int i, bytes;
+     int /*i,*/ bytes;
      char *inicio, *final;
 	  
      bytes=0;
@@ -21,11 +21,11 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
      final = inicio+len;
      
      while(texto < final){
-	  bytes = strcspn(texto, "(){}[]<>| ,;.:\n\'\"*+-/=$#!?\0%\\");
+	  bytes = strcspn(texto, "%_~(){}[[]]<>| ,;.:\n\'\"*+-/=$#!?\0%\\");
 	  if(bytes == 0) /* no encontro ningun separador, avanzo*/
 	       texto++;
 	  else if(texto+bytes < final){
-	       /* Encontre una palabra, y no terminó el buffer */
+	       /* Encontre una palabra, y no termin el buffer */
 	       /* TODO: Guardo la palabra al archivo */
 	       /* avanzo en el archivo */
 
@@ -33,19 +33,23 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
 	       int i;
 	       for (i = 0 ; i < bytes; i++)
 		    palabra[i] = tolower(texto[i]);
-	       palabra[bytes] = '\0';
-
-	       /* Si no es una stopWord, la escribimos */
-	       if(rb_find(stopWords, palabra) == NULL){
-		    //palabra[bytes]='\n';
-		    int auxiliar = bytes+1;
+	       	palabra[bytes] = '\0';
+		   /* Si no es una stopWord, la escribimos */
+	       if((rb_find(stopWords, palabra) == NULL) && (strcspn(palabra, "-0123456789@^_%~") != 0)){
+//		    palabra[bytes]='\n';
+		    int auxiliar = bytes;//+1;
 		    Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
-		    auxiliar = sizeof(int)*2; //Tamaño del par Doc,Freq
+		    printf("%d ",auxiliar);
+		    auxiliar = sizeof(int)*2; //Tamao del par Doc,Freq
 		    Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
+		    printf("%d ",auxiliar);
+		    printf("%s ",palabra);
 		    Fwrite(parser->archivoActual, palabra, auxiliar);
 		    auxiliar=1; // frecuencia
 		    Fwrite(parser->archivoActual, &(parser->documentoID), sizeof(parser->documentoID));
-		    Fwrite(parser->archivoActual, &auxiliar, sizeof(auxliar));
+		    printf("%d ",parser->documentoID);
+		    Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
+	       	printf("%d\n",auxiliar);
 	       }
 	       free(palabra);
 	  }
@@ -93,7 +97,7 @@ static void Parser_ComenzarElemento(void *data, const xmlChar *name, const xmlCh
      }
      else if(strncmp(nombre, "text", strlen("text")) == 0){
           /* Comienza el texto del documento */
-	  /* TODO: ¿alguna inicializacion? */
+	  /* TODO: alguna inicializacion? */
      }
 }
 
@@ -202,7 +206,7 @@ Parser* Parser_Crear(const char* nombre, int tamanioPromedio, int particiones){
 	  parser->particiones = particiones;
 	  parser->SAXhandler = &SAXhandlerDefault;
 	  /* Creo el archivo destino del lexico */
-	  parser->archivoActual = Fopen("Lexico", "w"); 
+	  parser->archivoActual = Fopen("Lexico.txt", "w"); 
      }
 
      /* Si no existe el arbol de stopWords, lo creo */

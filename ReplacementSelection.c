@@ -16,11 +16,33 @@ int compararRegistros(const void* cadena1, const void* cadena2, const void* para
      return strncmp((char*)cadena1,(char*)cadena2,16);
 }
 
+int compararLexico(const void* cadena1, const void* cadena2, const void* parametroExtra){
+	char* cad1 = (char*) cadena1;
+	char* cad2 = (char*) cadena2;
+	char* longitudString1 = (char*) malloc(sizeof(int));
+	strncpy(longitudString1,cad1,4);
+	char* longitudString2 = (char*) malloc(sizeof(int));;
+	strncpy(longitudString2,cad2,4);
+	int longitud1 = atoi(longitudString1);
+	int longitud2 = atoi(longitudString2);
+	char* termino1 = (char*) malloc(sizeof(char)*longitud1);
+	char* termino2 = (char*) malloc(sizeof(char)*longitud2);
+	cadena1+=7;
+	strncpy(termino1,cad1,longitud1);
+	cadena2+=7;
+	strncpy(termino2,cad2,longitud2);
+	free(longitudString1);
+	free(longitudString2);
+	int resultado = strcmp(termino1,termino2);
+	free(termino1);
+	free(termino2);
+	return resultado;
+}
 
 Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
 
      /* Creo el arbol para almacenar los elementos */ 
-     struct rb_table *miArbol = rb_create(compararCadenas, NULL, NULL);
+     struct rb_table *miArbol = rb_create(compararLexico, NULL, NULL);
      
      int palabrasAlmacenadas = 0;
      /* Lleno el arbol hasta la cantidad dada */

@@ -41,6 +41,17 @@ void Fwrite(Tarch *archivo, void* datos, size_t tam){
 	   	fwrite(datos,tam,1,archivo->fd);
   }
 }     
+
+void FwriteReg(Tarch *archivo, void* datos){
+  if(archivo != NULL){
+       if(archivo->fd != NULL)
+	    fwrite(datos,						\
+		   ((int*)datos)[0]+((int*)datos)[1]+2*sizeof(int),	\
+		   1,							\
+		   archivo->fd);
+  }
+}     
+
 void Fread(Tarch *archivo, void* datos, size_t tam){
   if(archivo != NULL){
 
@@ -48,6 +59,26 @@ void Fread(Tarch *archivo, void* datos, size_t tam){
       fread(datos, tam, 1 ,archivo->fd );
          
   }
+}
+
+void FreadReg(Tarch *archivo, void** datos){
+     if(archivo != NULL){
+	  if(archivo->fd != NULL){
+	       int tamanio[2];
+	       fread(tamanio, 2*sizeof(int), 1 ,archivo->fd);
+	       if(Feof(archivo)){
+		    printf("ERRORR: LEYENDO DESDE EOF.\n");
+		    *datos = NULL;
+		    return;
+	       }
+		    
+	       *datos = malloc(tamanio[0]+tamanio[1]+2*sizeof(int));
+	       (*(int**)datos)[0] = tamanio[0];
+	       (*(int**)datos)[1] = tamanio[1];
+
+	       fread(*datos+2*sizeof(int), tamanio[0]+tamanio[1], 1, archivo->fd);
+	  }
+     }  
 }
 
 void FreadLn(Tarch *archivo, void** datos){

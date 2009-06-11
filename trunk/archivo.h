@@ -23,9 +23,15 @@ int Feof(Tarch* archivo);
 
 /* Escribe en el archivo 'tam' bytes del buffer 'datos' */
 void Fwrite(Tarch *archivo, void* datos, size_t tam);
+/* Escribe un registro de la forma (int)(int)(termino)(punteros) */
+void FwriteReg(Tarch *archivo, void* datos);
 
 /* Lee del archivo 'tam' bytes en el buffer 'datos' */
 void Fread(Tarch *archivo, void* datos, size_t tam);
+
+/* Lee del archivo un registro de la forma:
+ * (int)(int)(termino)(punteros) */
+void FreadReg(Tarch *archivo, void** datos);
 
 /* Lee del archivo una linea completa en el buffer 'datos' */
 void FreadLn(Tarch *archivo, void** datos);

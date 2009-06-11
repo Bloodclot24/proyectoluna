@@ -44,12 +44,12 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
 		    Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
 		    printf("%d ",auxiliar);
 		    printf("%s ",palabra);
-		    Fwrite(parser->archivoActual, palabra, auxiliar);
+		    Fwrite(parser->archivoActual, palabra, bytes);
 		    auxiliar=1; // frecuencia
 		    Fwrite(parser->archivoActual, &(parser->documentoID), sizeof(parser->documentoID));
 		    printf("%d ",parser->documentoID);
 		    Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
-	       	printf("%d\n",auxiliar);
+		    printf("%d\n",auxiliar);
 	       }
 	       free(palabra);
 	  }
@@ -59,6 +59,11 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
 		* vez */
 	       //parser->palabraAuxiliar = (char*)malloc(bytes);
 	       //strncpy(parser->palabraAuxiliar, texto, bytes);
+	       //char *auxiliar = malloc(bytes+1);
+	       //strncpy(auxiliar, texto, bytes);
+	       //auxiliar[bytes]='\0';
+	       //printf("------> palabra incompleta %s \n", auxiliar);
+	       //free(auxiliar);
 	       //parser->numAuxiliar = bytes;
 	  }
 	  texto += bytes;

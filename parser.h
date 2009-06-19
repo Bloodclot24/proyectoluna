@@ -40,7 +40,9 @@ typedef struct Parser{
      char* palabraAuxiliar;
      /* cantidad de caracteres de la palabra a medias */
      int numAuxiliar;
-
+     
+     /* flag que indica si la palabra anterior esta incompleta o no */
+	 int palabraIncompleta;	
      /*
       * Tamanio promedio de cada particion, tamanio de la particion actual
       * cantidad maxima de particiones.

@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv){
 
-     Tarch *archivo = Fopen("salida","r");
+     Tarch *archivo = Fopen("Lexico.txt","r");
 
      Tparticiones *TP = ReplacementSelection(archivo, 100000);
 

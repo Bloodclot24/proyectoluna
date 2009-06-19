@@ -10,63 +10,80 @@ static struct rb_table *stopWords=NULL;
 
 /* Guarda el lexico en el archivo asociado al parser */
 void Parser_GuardarLexico(Parser* parser, char* texto, int len){
-     if(parser == NULL)
-	  return ;
+     if(parser == NULL)	return ;
 
      int /*i,*/ bytes;
      char *inicio, *final;
-	  
-     bytes=0;
+	 bytes=0;
      inicio = texto;
      final = inicio+len;
      
      while(texto < final){
 	  bytes = strcspn(texto, "%_~(){}[[]]<>| ,;.:\n\'\"*+-/=$#!?\0%\\");
+//	  while((!ispunct(*(texto+bytes))) && (!iscntrl(*(texto+bytes))) && (bytes < len) ){
+//	  	bytes++;
+//	  	printf("bytes: %i\n", bytes);
+//	  }
 	  if(bytes == 0) /* no encontro ningun separador, avanzo*/
 	       texto++;
 	  else if(texto+bytes < final){
-	       /* Encontre una palabra, y no termin el buffer */
-	       /* TODO: Guardo la palabra al archivo */
-	       /* avanzo en el archivo */
-
-	       char *palabra = (char*) malloc(bytes+1);
-	       int i;
-	       for (i = 0 ; i < bytes; i++)
-		    palabra[i] = tolower(texto[i]);
-	       	palabra[bytes] = '\0';
-		   /* Si no es una stopWord, la escribimos */
-	       if((rb_find(stopWords, palabra) == NULL) && (strcspn(palabra, "-0123456789@^_%~") != 0)){
-//		    palabra[bytes]='\n';
-		    int auxiliar = bytes;//+1;
-		    Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
-		    printf("%d ",auxiliar);
-		    auxiliar = sizeof(int)*2; //Tamao del par Doc,Freq
-		    Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
-		    printf("%d ",auxiliar);
-		    printf("%s ",palabra);
-		    Fwrite(parser->archivoActual, palabra, bytes);
-		    auxiliar=1; // frecuencia
-		    Fwrite(parser->archivoActual, &(parser->documentoID), sizeof(parser->documentoID));
-		    printf("%d ",parser->documentoID);
-		    Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
-		    printf("%d\n",auxiliar);
+	       	/* Encontre una palabra, y no termin el buffer */
+	       	/* TODO: Guardo la palabra al archivo */
+	       	/* avanzo en el archivo */
+	       	int i,j;
+	       	char *palabra = NULL;
+	       	if(parser->palabraIncompleta){
+	       		palabra = (char*) malloc(bytes+1+parser->numAuxiliar);
+				strncpy(palabra,parser->palabraAuxiliar,parser->numAuxiliar);
+				palabra[parser->numAuxiliar]=0;
+				parser->palabraIncompleta = 0;
+				j = parser->numAuxiliar;
+				fprintf(stderr,"%s, indice %i, bytes %i\n",palabra,parser->numAuxiliar,bytes);
+			//	free(parser->palabraAuxiliar);
+			}else{
+				palabra = (char*) malloc(bytes+1);
+				j = 0;
+	       	}
+	       	for (i=0; i < bytes; i++)
+		    	palabra[i+j] = tolower(texto[i]);
+	       	palabra[bytes+j] = '\0';
+		   	/* Si no es una stopWord, la escribimos */
+	       	if((rb_find(stopWords, palabra) == NULL) && (strcspn(palabra, "-0123456789@^_%~'&") != 0)){
+//		    	palabra[bytes]='\n';
+		    	int auxiliar = bytes+j;//+1;
+		    	Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
+		    	printf("%d ",auxiliar);
+		    	auxiliar = sizeof(int)*2; //Tamao del par Doc,Freq
+		    	Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
+		    	printf("%d ",auxiliar);
+		    	printf("%s ",palabra);
+		    	Fwrite(parser->archivoActual, palabra, bytes+j);
+		    	auxiliar=1; // frecuencia
+		    	Fwrite(parser->archivoActual, &(parser->documentoID), sizeof(parser->documentoID));
+		    	printf("%d ",parser->documentoID);
+		    	Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
+		    	printf("%d\n",auxiliar);
 	       }
-	       free(palabra);
-	  }
-	  else{
+	    //   free(palabra);
+	  	}else{
 	       /* se nos termina el buffer y nos quedamos a mitad de
-		* una palabra, guardamos el fragmento para la proxima
-		* vez */
-	       //parser->palabraAuxiliar = (char*)malloc(bytes);
-	       //strncpy(parser->palabraAuxiliar, texto, bytes);
-	       //char *auxiliar = malloc(bytes+1);
-	       //strncpy(auxiliar, texto, bytes);
-	       //auxiliar[bytes]='\0';
-	       //printf("------> palabra incompleta %s \n", auxiliar);
-	       //free(auxiliar);
-	       //parser->numAuxiliar = bytes;
-	  }
-	  texto += bytes;
+			* una palabra, guardamos el fragmento para la proxima
+			* vez */
+	       parser->palabraAuxiliar = (char*)malloc(bytes);
+	       strncpy(parser->palabraAuxiliar, texto, bytes);
+	       char *auxiliar = malloc(bytes+1);
+	       strncpy(auxiliar, texto, bytes);
+	       auxiliar[bytes]='\0';
+	       fprintf(stderr, "palabra incompleta %s \n", auxiliar);
+	      // free(auxiliar);
+	       parser->numAuxiliar = bytes;
+	       parser->palabraIncompleta = 1;
+	       int i;
+	       for (i = 0; i < bytes; i++)
+		    	parser->palabraAuxiliar[i] = tolower(parser->palabraAuxiliar[i]);
+	       	
+	  	}
+	  	texto += bytes;
      }
 }
 
@@ -229,5 +246,6 @@ Parser* Parser_Crear(const char* nombre, int tamanioPromedio, int particiones){
  	  } 
 	  Fclose(archivo);
      }
+     parser->palabraIncompleta = 0;
      return parser;
 }

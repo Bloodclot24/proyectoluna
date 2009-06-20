@@ -8,9 +8,52 @@
 /* Arbol y parametro extra para procesar las stopWords */
 static struct rb_table *stopWords=NULL;
 
+/* Filtra los caracteres invalidos, devolviendo la longitud de la palabra hasta encontrar
+ * el primer caracter invalido */
+int Parser_Caracteres_Invalidos(char* texto, int length) {
+
+	int invalido = 0;
+	int i = 0;
+	while( !invalido){
+		if((i == length) || ((texto [i] <= 47) && (texto[i] >= 0)) || 
+		   ((texto[i] > 57) && (texto[i] <= 64)) || 
+		   ((texto[i] > 90) && (texto[i] <= 96)) || ((texto[i] >  122) && (texto[i] < 128)))
+			
+			invalido = 1;
+		i++;
+	}
+	return --i;
+}
+
 /* Guarda el lexico en el archivo asociado al parser */
 void Parser_GuardarLexico(Parser* parser, char* texto, int len){
      if(parser == NULL)	return ;
+
+	/*********/
+//	int j= 1;
+//	char aFiltrar[256];
+//	int contador = 0;
+//	while(j<128){
+//		
+//		strcat(aFiltrar,(char*)&j);
+//		
+//		switch(j){
+//		case 47:
+//			j= 	57;
+//			break;
+//		case 64:
+//			j= 	90;
+//			break;
+//		case 96:
+//			j= 122;
+//			break;
+//		}
+//		j++;
+//		contador++;
+//	}
+////	aFiltrar[contador] = '\0';	
+//
+//	/*************/
 
      int /*i,*/ bytes;
      char *inicio, *final;
@@ -19,15 +62,16 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
      final = inicio+len;
      
      while(texto < final){
-	  bytes = strcspn(texto, "%_~(){}[[]]<>| ,;.:\n\'\"*+-/=$#!?\0%\\");
+	  //bytes = strcspn(texto, /*"%_~(){}[[]]<>| ,;.:\t\b\n\'\"*+-/=$#!?\0%\\"*/strcat(aFiltrar,"%_~(){}[[]]<>| ,;.:\t\b\n\'\"*+-/=$#!?\0%\\"));
+	  bytes= Parser_Caracteres_Invalidos(texto, len);
 //	  while((!ispunct(*(texto+bytes))) && (!iscntrl(*(texto+bytes))) && (bytes < len) ){
 //	  	bytes++;
-//	  	printf("bytes: %i\n", bytes);
+	  	fprintf(stderr,"bytes: %i\n", bytes);
 //	  }
 	  if(bytes == 0) /* no encontro ningun separador, avanzo*/
 	       texto++;
 	  else if(texto+bytes < final){
-	       	/* Encontre una palabra, y no termin el buffer */
+	       	/* Encontre una palabra, y no termine el buffer */
 	       	/* TODO: Guardo la palabra al archivo */
 	       	/* avanzo en el archivo */
 	       	int i,j;
@@ -38,7 +82,7 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
 				palabra[parser->numAuxiliar]=0;
 				parser->palabraIncompleta = 0;
 				j = parser->numAuxiliar;
-				fprintf(stderr,"%s, indice %i, bytes %i\n",palabra,parser->numAuxiliar,bytes);
+	//			fprintf(stderr,"%s, indice %i, bytes %i\n",palabra,parser->numAuxiliar,bytes);
 			//	free(parser->palabraAuxiliar);
 			}else{
 				palabra = (char*) malloc(bytes+1);
@@ -74,7 +118,7 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
 	       char *auxiliar = malloc(bytes+1);
 	       strncpy(auxiliar, texto, bytes);
 	       auxiliar[bytes]='\0';
-	       fprintf(stderr, "palabra incompleta %s \n", auxiliar);
+//	       fprintf(stderr, "palabra incompleta %s \n", auxiliar);
 	      // free(auxiliar);
 	       parser->numAuxiliar = bytes;
 	       parser->palabraIncompleta = 1;

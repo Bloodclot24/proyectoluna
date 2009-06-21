@@ -35,6 +35,13 @@ int Feof(Tarch* archivo){
      }     
 }
 
+int Fseek(Tarch* archivo, long offset, int whence){
+     if(archivo != NULL){
+	  if(archivo->fd != NULL)
+	       return fseek(archivo->fd, offset, whence);
+     }
+}
+
 void Fwrite(Tarch *archivo, void* datos, size_t tam){
   if(archivo != NULL){
        if(archivo->fd != NULL)

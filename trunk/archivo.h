@@ -36,6 +36,8 @@ void FreadReg(Tarch *archivo, void** datos);
 /* Lee del archivo una linea completa en el buffer 'datos' */
 void FreadLn(Tarch *archivo, void** datos);
 
+int Fseek(Tarch* archivo, long offset, int whence);
+
 /* Vuelve al principio del archivo */
 void Frewind(Tarch* archivo);
 

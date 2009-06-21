@@ -1,26 +1,12 @@
 #include "matrizBayes.h"
-
-typedef struct Matriz{
-     Tarch *elementos, *columnas, *inicioFila;
-     uint32_t numFilas;
-     uint32_t numColumnas;
-};
-
-typedef struct HiperParametros{
-     int* alpha;
-     int* beta;
-};
-
-typedef struct Query{
-     int* query;
-     int elementos;
-};
+#include <stdint.h>
+#include <math.h>
 
 Matriz* armarMatriz(Tarch* archAuxiliar){
      Matriz *X = (Matriz*)malloc(sizeof(Matriz));
      Tarch *arch1, *arch2, *arch3;
      
-     char* linea;
+     int* linea;
      int cant_terminos= 0;
      
      arch1 = Fopen("matriz1","w");
@@ -52,7 +38,7 @@ Matriz* armarMatriz(Tarch* archAuxiliar){
 	       // escribo en que posicion debe estar el numero (nº doc)
 	       Fwrite(arch2, inicio,sizeof(int));
 	       inicio +=2;
-	       numFila++;
+	       numFilas++;
 	  }
      }
 
@@ -64,20 +50,20 @@ Matriz* armarMatriz(Tarch* archAuxiliar){
      X->columnas = arch2;
      X->inicioFila = arch3;
      X->numColumnas = numColumnas+1;
-     X->numFilas = numfilas;
+     X->numFilas = numFilas;
 
      return X;
 }
 
-HiperParametros* BSParam(Matriz X, double dParam){
+HiperParametros* BSParam(Matriz *X, double dParam){
      int size = X->numFilas;
-     int *fila = (int*)malloc(sizeof(int)*X->numColumnas);
-     int *alpha, *beta;
+     double *fila = (double*)malloc(sizeof(double)*X->numColumnas);
+     double *alpha, *beta;
      int i,j;
      int columnas, columnasAnterior;
      int posicion, valor;
 
-     memset(fila,0,sizeof(int)*X->numColumnas);
+     memset(fila,0,sizeof(double)*X->numColumnas);
 
 
      /*   m = full(sum(X,2))  */
@@ -86,14 +72,14 @@ HiperParametros* BSParam(Matriz X, double dParam){
 
      for(i=0;i<X->numFilas;i++){
 	  Fread(X->inicioFila, &columnas, sizeof(int));
-	  while(j=0;j<columnas-columnasAnterior;j++){
+	  for(j=0;j<columnas-columnasAnterior;j++){
 	       Fread(X->columnas,&posicion,sizeof(int));
 	       Fread(X->elementos,&valor,sizeof(int));
 	       fila[posicion] += valor;
 	  }
      }
 
-     alpha = (int*)malloc(sizeof(int)*X->numColumnas);
+     alpha = (double*)malloc(sizeof(double)*X->numColumnas);
      beta = fila;
 
 
@@ -110,23 +96,29 @@ HiperParametros* BSParam(Matriz X, double dParam){
      par->alpha = alpha;
      par->beta = beta;
 
-     Frewind(arch1);
-     Frewind(arch2);
-     Frewind(arch3);
+     Frewind(X->elementos);
+     Frewind(X->columnas);
+     Frewind(X->inicioFila);
      
      return par;
 }
 
-int* BSets(Matriz X, Query* q, HiperParametros param){
+double* BSets(Matriz *X, Query* q, HiperParametros *param){
      int n=q->elementos;
 
-     int* c=malloc(sizeof(int)*X->numFilas);
+     double* c = (double*)malloc(sizeof(double)*X->numFilas);
+
+     memset(c,0,sizeof(double)*X->numFilas);
 
      int i,j;
      int fila=0;
      int comienzoFila=0;
      int elementosFila=0;
      int repetida =0;
+     int columna=0;
+     int elem;
+
+     /* c = sum(X(:,q),2); */
 
      Fread(X->inicioFila, &comienzoFila, sizeof(int));
      Fread(X->inicioFila, &elementosFila, sizeof(int));
@@ -154,5 +146,38 @@ int* BSets(Matriz X, Query* q, HiperParametros param){
 	  }
 	  repetida = 1;	  
      }
+
+     double* w = c;
      
+     /* w = log(1 + c ./ alpha) - log(1 + (n - c) ./ beta); */
+
+     for(i=0;i<X->numFilas;i++)
+	  w[i] = log(1+c[i] / param->alpha[i]) - log(1+(n-c[i]) / param->beta[i]);
+
+     Frewind(X->elementos);
+     Frewind(X->columnas);
+     Frewind(X->inicioFila);
+
+     /* s = w' * X; */
+     double* s = (double*)malloc(sizeof(double)*X->numFilas);
+     memset(s,0,sizeof(double)*X->numFilas);
+
+     Fread(X->inicioFila, &comienzoFila, sizeof(int));
+     elementosFila = 0;
+
+     for(i=0;i<X->numFilas;i++){
+
+	  comienzoFila += elementosFila;
+	  Fread(X->inicioFila, &elementosFila, sizeof(int));
+	  elementosFila -= comienzoFila;
+
+	  for(j=0;j<elementosFila;j++){
+	       Fread(X->elementos, &elem, sizeof(int));
+	       Fread(X->columnas, &columna, sizeof(int));
+	       s[columna] += w[columna]*elem;
+	  }
+     }
+
+     free(w);
+     return s;
 }

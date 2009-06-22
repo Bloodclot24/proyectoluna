@@ -61,21 +61,24 @@ uint64_t Fsize(Tarch* archivo);
 
 /* Obtiene la cantidad de bytes que ocupan todos los punteros de un
  * registro */
-uint32_t RegGetPointersLength(void *reg);
+uint32_t RegGetPointersLength(const void *reg);
 
 /* Obtiene la longitud total de un registro */
-uint32_t RegLength(void *reg);
+uint32_t RegLength(const void *reg);
 
 /* Obtiene la cantidad de punteros que guarda un registro */
-uint32_t RegGetNumPointers(void *reg);
+uint32_t RegGetNumPointers(const void *reg);
 
 /* Devuelve un puntero a la palabra que almacena un registro */
-const char* RegGetWord(void* reg);
+const char* RegGetWord(const void* reg);
 
 /* Devuelve la longitud de la palabra almacenada en el registro */
-uint32_t RegGetWordLength(void *reg);
+uint32_t RegGetWordLength(const void *reg);
 
 /* Obtiene elpuntero (num) almacenado en elregistro */
-uint32_t RegGetPointer(void* reg, int num);
+uint32_t RegGetPointer(const void* reg, int num);
+
+/* Asigna una lista de punteros al registro, descartando los anteriores */
+void* RegSetPointers(void* reg, const uint32_t* pointers, uint32_t numPointers);
 
 #endif /* ARCHIVO_H_INCLUDED */

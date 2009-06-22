@@ -42,6 +42,31 @@ int Fseek(Tarch* archivo, long offset, int whence){
      }
 }
 
+uint64_t Ftell(Tarch* archivo){
+     if(archivo == NULL)
+	  return 0;
+
+     if(archivo->fd == NULL)
+	  return 0;
+
+     return ftell(archivo->fd);
+}
+
+uint64_t Fsize(Tarch* archivo){
+     if(archivo == NULL)
+	  return 0;
+
+     if(archivo->fd == NULL)
+	  return 0;
+
+     uint64_t posicion = Ftell(archivo);
+     Fseek(archivo, 0, SEEK_END);
+     uint64_t tamanio = Ftell(archivo);
+     Fseek(archivo,posicion, SEEK_SET);
+     
+     return tamanio;
+}
+
 void Fwrite(Tarch *archivo, void* datos, size_t tam){
   if(archivo != NULL){
        if(archivo->fd != NULL)
@@ -127,4 +152,67 @@ void Funlink(Tarch* archivo){
        free(archivo);
 
   }
+}
+
+uint32_t RegLength(void *reg){
+     if(reg == NULL)
+	  return 0;
+
+     return RegGetWordLength(reg)+RegGetPointersLength(reg)+2*sizeof(int);
+}
+
+uint32_t RegGetWordLength(void *reg){
+     if(reg == NULL)
+	  return 0;
+     return ((int*)reg)[0];
+}
+
+uint32_t RegGetPointersLength(void *reg){
+     if(reg == NULL)
+	  return 0;
+     return ((int*)reg)[1];
+}
+
+uint32_t RegGetNumPointers(void *reg){
+     if(reg == NULL)
+	  return 0;
+     return ((int*)reg)[1]/(sizeof(int));
+}
+
+const char* RegGetWord(void* reg){
+     if(reg == NULL)
+	  return NULL;
+     return (char*)reg+2*sizeof(int);
+}
+
+uint32_t RegGetPointer(void* reg, int num){
+     if(reg != NULL || num >= RegGetNumPointers(reg))
+	  return -1;
+
+     uint32_t inicio = RegGetWordLength()+2*sizeof(int)+num*sizeof(int);
+     return *((int*)(reg+inicio));
+}
+
+char* FreadString(Tarch* archivo){
+     if(archivo == NULL)
+	  return NULL;
+     if(archivo->fd == NULL)
+	  return NULL;
+     
+     int tamanioActual = 20;
+     char* string = malloc(tamanioActual);
+     int i=0;
+
+     char c;
+     do{
+	  Fread(archivo, &c, sizeof(c));
+	  string[i]=c;
+	  i++;
+	  if(i>= tamanioActual){
+	       tamanioActual+=10;
+	       string = realloc(string, tamanioActual);
+	  }
+     }while(c!=0);
+
+     return string;
 }

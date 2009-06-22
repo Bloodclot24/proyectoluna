@@ -33,4 +33,8 @@ HiperParametros* BSParam(Matriz *X, double dParam);
  * bayesianos  */
 double* BSets(Matriz *X, Query* q, HiperParametros *param);
 
+/* Arma un Query agregando el termino especificado. Si query es NULL,
+ * devuelve un nuevo Query, si no, agrega un nuevo termino. */
+Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punterosLexico);
+
 #endif /*MATRIZBAYES_H_*/

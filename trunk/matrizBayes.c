@@ -1,4 +1,5 @@
 #include "matrizBayes.h"
+#include "archivo.h"
 
 #define QUERY_ELEM_UNIT 5
 
@@ -7,7 +8,6 @@ Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico)
      Tarch *arch1, *arch2, *arch3;
      
      int* linea;
-     int cant_terminos= 0;
      
      arch1 = Fopen("matriz1","w");
      arch2 = Fopen("matriz2","w");
@@ -23,7 +23,6 @@ Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico)
      int comienzo=0;
 
      uint32_t numFilas=0, numColumnas=0;
-     char *termino;
      
      while(!Feof(archAuxiliar)) {
 	  FreadReg(archAuxiliar, (void**)&linea);
@@ -38,26 +37,22 @@ Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico)
 	  offset += RegGetWordLength(linea)+1;
 	  
 	  numFilas++;
-	  int cantidad = RegGetNumPointers(linea); //((int*)linea)[1];
-	  cantidad /= 2;  //cantidad /= sizeof(int)*2; // cantidad de pares documento frecuencia
+	  int cantidad = RegGetNumPointers(linea); 
+	  cantidad /= 2;
 
-	  //int* inicio = linea+((int*)linea)[0]+2*sizeof(int);
-	  //Aca empieza la fila
-	  int* inicio;
 	  Fwrite(arch3, &comienzo, sizeof(int));
 	  
 	  int i;
 	  int puntero=0;
 	  for(i=0;i<cantidad;i++){
-	       if(numColumnas< RegGetPointer(linea,puntero)) //inicio[0])
-		    numColumnas = RegGetPointer(linea,puntero); //inicio[0];
+	       if(numColumnas< RegGetPointer(linea,puntero)) 
+		    numColumnas = RegGetPointer(linea,puntero); 
 	       comienzo++;
 	       // por cada registro, escribo 1 si el termino esta en ese documento
 	       Fwrite(arch1, &uno,sizeof(int));
 	       // escribo en que posicion debe estar el numero (nº doc)
 	       int posicion = RegGetPointer(linea,puntero);
 	       Fwrite(arch2, &posicion, sizeof(int));
-	       //inicio +=2;
 	       puntero += 2;
 	  }
      }
@@ -79,7 +74,6 @@ Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico)
 }
 
 HiperParametros* BSParam(Matriz *X, double dParam){
-     int size = X->numFilas;
      double *fila = (double*)malloc(sizeof(double)*X->numColumnas);
      double *alpha, *beta;
      int i,j;

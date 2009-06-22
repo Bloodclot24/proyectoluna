@@ -27,4 +27,10 @@ int main(){
      HiperParametros *H = BSParam(X,2);
      double* resultado = BSets(X,q,H);
 
+     printf("Puntajes = [");
+     for(i=0;i<X->numFilas-1;i++){
+	  printf("%f, ", resultado[i]);
+     }
+     printf("%f]\n", resultado[i]);
+     return 1;
 }

@@ -31,8 +31,8 @@ int Feof(Tarch* archivo){
      if(archivo != NULL){
 	  if(archivo->fd != NULL)
 	       return feof(archivo->fd);
-	  
      }     
+     return 1;
 }
 
 int Fseek(Tarch* archivo, long offset, int whence){
@@ -40,6 +40,7 @@ int Fseek(Tarch* archivo, long offset, int whence){
 	  if(archivo->fd != NULL)
 	       return fseek(archivo->fd, offset, whence);
      }
+     return -1;
 }
 
 uint64_t Ftell(Tarch* archivo){
@@ -99,7 +100,6 @@ void FreadReg(Tarch *archivo, void** datos){
 	       int tamanio[2];
 	       fread(tamanio, 2*sizeof(int), 1 ,archivo->fd);
 	       if(Feof(archivo)){
-		    printf("ERRORR: LEYENDO DESDE EOF.\n");
 		    *datos = NULL;
 		    return;
 	       }
@@ -136,7 +136,6 @@ void Frewind(Tarch* archivo){
 	  if(archivo->fd != NULL){
 	       fclose(archivo->fd);
 	       archivo->fd = fopen(archivo->nombre, "rw");
-	       //rewind(archivo->fd);
 	  }
      }
 }

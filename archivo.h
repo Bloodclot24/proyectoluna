@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <malloc.h>
+#include <stdint.h>
 
 /* Estructura para almacenar los datos del archivo */
 typedef struct Tarch{

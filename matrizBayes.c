@@ -1,21 +1,21 @@
 #include "matrizBayes.h"
-#include <stdint.h>
-#include <math.h>
 
-Matriz* armarMatriz(Tarch* archAuxiliar){
+#define QUERY_ELEM_UNIT 5
+
+Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico){
      Matriz *X = (Matriz*)malloc(sizeof(Matriz));
-     Tarch *arch1, *arch2, *arch3, *lexico, *punterosLexico;
+     Tarch *arch1, *arch2, *arch3;
      
      int* linea;
      int cant_terminos= 0;
      
-     arch1 = Fopen("matriz1","rw");
-     arch2 = Fopen("matriz2","rw");
-     arch3 = Fopen("matriz3","rw");
-     lexico = Fopen("Lexico", "rw");
-     punterosLexico = Fopen("PunterosLexico", "rw");
+     arch1 = Fopen("matriz1","w");
+     arch2 = Fopen("matriz2","w");
+     arch3 = Fopen("matriz3","w");
+     *lexico = Fopen("Lexico", "w");
+     *punterosLexico = Fopen("PunterosLexico", "w");
      
-     uint64_t offset;
+     uint64_t offset=0;
      char cero=0;
      
      
@@ -23,16 +23,17 @@ Matriz* armarMatriz(Tarch* archAuxiliar){
      int comienzo=0;
 
      uint32_t numFilas=0, numColumnas=0;
+     char *termino;
      
      while(!Feof(archAuxiliar)) {
 	  FreadReg(archAuxiliar, (void**)&linea);
 	  if(linea == NULL)
 	       break;
+	  
+	  Fwrite(*lexico, (void*)RegGetWord(linea), RegGetWordLength(linea));
+	  Fwrite(*lexico, &cero, sizeof(cero));
 
-	  Fwrite(lexico, RegGetWord(linea), RegGetWordLength(linea));
-	  Fwrite(lexico, &cero, sizeof(cero));
-
-	  Fwrite(punterosLexico, &offset, sizeof(offset));
+	  Fwrite(*punterosLexico, &offset, sizeof(offset));
 	  
 	  offset += RegGetWordLength(linea)+1;
 	  
@@ -42,27 +43,32 @@ Matriz* armarMatriz(Tarch* archAuxiliar){
 
 	  //int* inicio = linea+((int*)linea)[0]+2*sizeof(int);
 	  //Aca empieza la fila
+	  int* inicio;
 	  Fwrite(arch3, &comienzo, sizeof(int));
 	  
 	  int i;
 	  int puntero=0;
 	  for(i=0;i<cantidad;i++){
-	       if(numColumnas< RegGetPuntero(linea,puntero)) //inicio[0])
-		    numColumnas = RegGetPuntero(linea,puntero); //inicio[0];
+	       if(numColumnas< RegGetPointer(linea,puntero)) //inicio[0])
+		    numColumnas = RegGetPointer(linea,puntero); //inicio[0];
 	       comienzo++;
 	       // por cada registro, escribo 1 si el termino esta en ese documento
 	       Fwrite(arch1, &uno,sizeof(int));
 	       // escribo en que posicion debe estar el numero (nº doc)
-	       Fwrite(arch2, inicio,sizeof(int));
+	       int posicion = RegGetPointer(linea,puntero);
+	       Fwrite(arch2, &posicion, sizeof(int));
 	       //inicio +=2;
 	       puntero += 2;
 	       numFilas++;
 	  }
      }
+     Fwrite(arch3, &comienzo, sizeof(int));
 
      Frewind(arch1);
      Frewind(arch2);
      Frewind(arch3);
+     Frewind(*lexico);
+     Frewind(*punterosLexico);
 
      X->elementos = arch1;
      X->columnas = arch2;
@@ -203,7 +209,8 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punterosLexico){
      if(query == NULL){
 	  query = (Query*)malloc(sizeof(Query));
-	  query->elementos = (int*)malloc(10*sizeof(int));
+	  query->query = NULL;
+	  query->query = 0;
      }
      
      uint64_t inicio = 0;
@@ -220,14 +227,14 @@ Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punte
 	  Fseek(punterosLexico, medio*sizeof(uint64_t), SEEK_SET);
 	  Fread(punterosLexico, &posicionLexico, sizeof(posicionLexico));
 	  Fseek(lexico, posicionLexico, SEEK_SET);
-	  palabra = FreadString(lexico);
+	  palabra = (char*)FreadString(lexico);
 
 	  int resultado = strcmp(termino,palabra);
 
-	  if(resultado > 1){
+	  if(resultado > 0){
 	       inicio = medio+1;
 	  }
-	  else if(resultado < 1){
+	  else if(resultado < 0){
 	       fin = medio-1;
 	  }
 	  else{
@@ -236,6 +243,11 @@ Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punte
      }
 
      if(encontrado){
-	  
+	  if(query->elementos%QUERY_ELEM_UNIT == 0){
+	       query->query = realloc(query->query, (query->elementos+QUERY_ELEM_UNIT)*sizeof(int));
+	  }
+	  query->query[(query->elementos)++] = medio;
      }
+
+     return query;
 } 

@@ -2,6 +2,9 @@
 #define MATRIZBAYES_H_
 
 #include "archivo.h"
+#include <stdint.h>
+#include <math.h>
+
 
 typedef struct {
      Tarch *elementos, *columnas, *inicioFila;
@@ -20,7 +23,7 @@ typedef struct{
 }Query;
 
 /* Arma una matriz segun el archivo auxiliar */
-Matriz* armarMatriz(Tarch* archAuxiliar);
+Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico);
 
 /* Calcula hiperparametros dada la matriz X y un parametro de
  * concentracion de Dirichlet (generalmente dParam=2) */

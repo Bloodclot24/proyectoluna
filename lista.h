@@ -22,6 +22,9 @@ void* Lista_PrimerElemento(Lista* lista);
 /* Indica si la lista esta o no vacia */
 int Lista_EstaVacia(Lista* lista);
 
+/* Devuelve la cantidad de elementos de la lista */
+int Lista_CantidadElem(Lista* lista);
+
 /* Devuelve el primer elemento de la lista y lo extrae de la misma*/
 void* Lista_RemoverPrimero(Lista* lista);
 

@@ -38,10 +38,10 @@ int compararLexico(const void* cadena1, const void* cadena2, const void* paramet
 /* 	free(termino2); */
 /* 	return resultado; */
 
-     return strncmp(cadena1+2*sizeof(int),				\
-		    cadena2+2*sizeof(int),				\
-		    ((int*)cadena1)[0]>((int*)cadena2)[0]?		\
-		    ((int*)cadena1)[0]:((int*)cadena2)[0]);
+     return strncmp(RegGetWord(cadena1),				\
+		    RegGetWord(cadena2),				\
+		    (RegGetWordLength(cadena1))>(RegGetWordLength(cadena2))?		\
+		    (RegGetWordLength(cadena2)):(RegGetWordLength(cadena1)));
 }
 
 Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
@@ -80,7 +80,7 @@ Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
 				       terminos, entonces solo debemos
 				       vaciar el arbol */
 	  int primero = 1;
-	  char* ultimaPalabra = "\0";
+	  char* ultimaPalabra = "\0\0\0\0\0\0\0\0\0";
 	  char* palabra = NULL;
 	  
 	  /* creo el nombre del archivo destino */

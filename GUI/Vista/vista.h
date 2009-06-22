@@ -1,25 +1,26 @@
 #ifndef VISTA_H_
 #define VISTA_H_
 
-#include <stdio.h>
+#include <string.h>
 #include <gtk/gtk.h> 
 
 #define PATH_VISTA "vista.glade"
 
 typedef struct Vista {
      GtkBuilder* builder;
-     Controlador* controlador;
+     struct Controlador* controlador;
 } Vista;
-#include "../Controlador/controlador.h"
+
+#include "../../Controlador/controlador.h"
 
 /* Crea una vista */
-void crearVista(Vista* vista, Controlador* controlador);
+void crearVista(Vista* vista, struct Controlador* controlador);
 
 /* Corre la vista */
 void correrVista(Vista* vista);
 
 /* Devuelve las palabras ingresadas */
-char* obtenerPalabras(Vista* vista);
+char* obtenerPalabrasVista(Vista* vista);
 
 /* Destruye la vista */
 void destruirVista(Vista* vista);

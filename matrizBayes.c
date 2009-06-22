@@ -4,14 +4,20 @@
 
 Matriz* armarMatriz(Tarch* archAuxiliar){
      Matriz *X = (Matriz*)malloc(sizeof(Matriz));
-     Tarch *arch1, *arch2, *arch3;
+     Tarch *arch1, *arch2, *arch3, *lexico, *punterosLexico;
      
      int* linea;
      int cant_terminos= 0;
      
-     arch1 = Fopen("matriz1","w");
-     arch2 = Fopen("matriz2","w");
-     arch3 = Fopen("matriz3","w");
+     arch1 = Fopen("matriz1","rw");
+     arch2 = Fopen("matriz2","rw");
+     arch3 = Fopen("matriz3","rw");
+     lexico = Fopen("Lexico", "rw");
+     punterosLexico = Fopen("PunterosLexico", "rw");
+     
+     uint64_t offset;
+     char cero=0;
+     
      
      int uno=1;
      int comienzo=0;
@@ -22,22 +28,34 @@ Matriz* armarMatriz(Tarch* archAuxiliar){
 	  FreadReg(archAuxiliar, (void**)&linea);
 	  if(linea == NULL)
 	       break;
+
+	  Fwrite(lexico, RegGetWord(linea), RegGetWordLength(linea));
+	  Fwrite(lexico, &cero, sizeof(cero));
+
+	  Fwrite(punterosLexico, &offset, sizeof(offset));
+	  
+	  offset += RegGetWordLength(linea)+1;
+	  
 	  numFilas++;
-	  int cantidad = ((int*)linea)[1];
-	  int* inicio = linea+((int*)linea)[0]+2*sizeof(int);
+	  int cantidad = RegGetNumPointers(linea); //((int*)linea)[1];
+	  cantidad /= 2;  //cantidad /= sizeof(int)*2; // cantidad de pares documento frecuencia
+
+	  //int* inicio = linea+((int*)linea)[0]+2*sizeof(int);
 	  //Aca empieza la fila
 	  Fwrite(arch3, &comienzo, sizeof(int));
-	  cantidad /= sizeof(int)*2; // cantidad de pares documento frecuencia
+	  
 	  int i;
+	  int puntero=0;
 	  for(i=0;i<cantidad;i++){
-	       if(numColumnas<inicio[0])
-		    numColumnas = inicio[0];
+	       if(numColumnas< RegGetPuntero(linea,puntero)) //inicio[0])
+		    numColumnas = RegGetPuntero(linea,puntero); //inicio[0];
 	       comienzo++;
 	       // por cada registro, escribo 1 si el termino esta en ese documento
 	       Fwrite(arch1, &uno,sizeof(int));
 	       // escribo en que posicion debe estar el numero (nº doc)
 	       Fwrite(arch2, inicio,sizeof(int));
-	       inicio +=2;
+	       //inicio +=2;
+	       puntero += 2;
 	       numFilas++;
 	  }
      }
@@ -181,3 +199,43 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
      free(w);
      return s;
 }
+
+Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punterosLexico){
+     if(query == NULL){
+	  query = (Query*)malloc(sizeof(Query));
+	  query->elementos = (int*)malloc(10*sizeof(int));
+     }
+     
+     uint64_t inicio = 0;
+     uint64_t fin = Fsize(punterosLexico)/sizeof(uint64_t);
+     uint64_t posicionLexico=0;
+     char* palabra;
+     
+     uint64_t medio;
+
+     int encontrado = 0;
+
+     while(inicio <= fin && !encontrado){
+	  medio = (inicio+fin)/2;
+	  Fseek(punterosLexico, medio*sizeof(uint64_t), SEEK_SET);
+	  Fread(punterosLexico, &posicionLexico, sizeof(posicionLexico));
+	  Fseek(lexico, posicionLexico, SEEK_SET);
+	  palabra = FreadString(lexico);
+
+	  int resultado = strcmp(termino,palabra);
+
+	  if(resultado > 1){
+	       inicio = medio+1;
+	  }
+	  else if(resultado < 1){
+	       fin = medio-1;
+	  }
+	  else{
+	       encontrado = 1;
+	  }
+     }
+
+     if(encontrado){
+	  
+     }
+} 

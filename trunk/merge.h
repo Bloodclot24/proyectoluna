@@ -3,8 +3,11 @@
 
 #include "archivo.h"
 #include "particiones.h"
+#include "lista.h"
 #include "rb.h"
+#include <string.h>
+#include <stdio.h>
 
-void merge(Tparticiones *Gparticion);
+Tarch* mergeLexico(Tparticiones *Gparticion, int cantidad);
 
 #endif /*MERGE_H_*/

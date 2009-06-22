@@ -28,6 +28,10 @@ void* Lista_Insertar(Lista* lista, void* elemento){
      }
 }
 
+int Lista_CantidadElem(Lista* lista){
+return lista->tamanio;	
+}
+
 void* Lista_PrimerElemento(Lista* lista){
      return Nodo_GetElemento(lista->primero);
 }

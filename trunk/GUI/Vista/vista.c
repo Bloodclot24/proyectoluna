@@ -5,7 +5,7 @@ void crearVista(Vista* vista, Controlador* controlador) {
    	vista->controlador= controlador;
 	
 	vista->builder= gtk_builder_new();
-   	gtk_builder_add_from_file(vista.builder, PATH_VISTA, NULL);
+   	gtk_builder_add_from_file(vista->builder, PATH_VISTA, NULL);
 }
 
 void connect_accept(GtkWidget *widget, Vista* vista) {
@@ -18,7 +18,7 @@ void correrVista(Vista* vista) {
 	
 	GtkWidget  *window;
 
-   	window= GTK_WIDGET(gtk_builder_get_object(vista.builder, "window"));
+   	window= GTK_WIDGET(gtk_builder_get_object(vista->builder, "window"));
    	gtk_widget_show_all(window);
    
    	gtk_builder_connect_signals(vista->builder, NULL);
@@ -33,13 +33,11 @@ void correrVista(Vista* vista) {
    	gtk_main();
 }
 
-char* obtenerPalabras(Vista* vista) {
+char* obtenerPalabrasVista(Vista* vista) {
 
 	GtkEntry *entryWords;
 	entryWords= GTK_ENTRY(gtk_builder_get_object(vista->builder, "entry_words"));
 	return (char*)gtk_entry_get_text(entryWords);
 }
 
-void destruirVista(Vista* vista) {
-
-}
+void destruirVista(Vista* vista) { }

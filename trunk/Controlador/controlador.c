@@ -2,13 +2,14 @@
 
 void crearControlador(Controlador* controlador, char* argv) {
 	
-	if(!strcmp(argv,"console")) {
+	
+	if(strcmp(argv,"consola")) {
 		controlador->vista= (Vista*) malloc(sizeof(Vista));
-		crearVista(vista, controlador);
+		crearVista(controlador->vista, controlador);
 		controlador->console= 0;
 	} else {
 		controlador->shell= (Shell*) malloc(sizeof(Shell));
-		crearShell(shell, controlador);
+		crearShell(controlador->shell, controlador);
 		controlador->console= 1;
 	}
 }
@@ -22,6 +23,7 @@ void correr(Controlador* controlador) {
 }
 
 void procesarPalabras(Controlador* controlador) {
+	
 	
 			
 }

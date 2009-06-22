@@ -10,17 +10,15 @@ void correrShell(Shell* shell) {
 	int exit= 0;
 	
 	while(!exit) {
-		printf(PROMPT);
-		
-			
+		printf("%s", PROMPT);
+		fgets(shell->command, 300, stdin);
+		procesarPalabras(shell->controlador);
 	}
-	
 }
 
-char* obtenerPalabras(Shell* shell) {
+char* obtenerPalabrasShell(Shell* shell) {
 	
+	return shell->command;
 }
 
-void destruirShell(Shell* shell) {
-	
-}
+void destruirShell(Shell* shell) { }

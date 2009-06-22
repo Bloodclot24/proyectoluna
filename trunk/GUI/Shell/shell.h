@@ -1,22 +1,25 @@
 #ifndef SHELL_H_
 #define SHELL_H_
 
-#define PROMPT "LUNA:~$ "
+#include <stdio.h>
+
+#define PROMPT "> LUNA:~$ "
 
 typedef struct Shell {
-     Controlador* controlador;
+     struct Controlador* controlador;
+     char command[300];
 } Shell;
 
-#include "../Controlador/controlador.h"
+#include "../../Controlador/controlador.h"
 
 /* Crea un shell */
-void crearShell(Shell* shell, Controlador* controlador);
+void crearShell(Shell* shell, struct Controlador* controlador);
 
 /* Corre el shell */
 void correrShell(Shell* shell);
 
 /* Devuelve las palabras ingresadas */
-char* obtenerPalabras(Shell* shell);
+char* obtenerPalabrasShell(Shell* shell);
 
 /* Destruye el shell */
 void destruirShell(Shell* shell);

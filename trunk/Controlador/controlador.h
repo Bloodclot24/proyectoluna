@@ -18,6 +18,25 @@ void crearControlador(Controlador* controlador, char* argv);
 void correr(Controlador* controlador);
 
 /* Procesa las palabras ingresadas en la vista */
+
+/* >Fiubasets "palabra" y/o "palabras" # 
+ * # se puede sugerir de 1 a N elementos separados por espacio, y encerrados 
+ * entre comillas si son palabras compuestas.
+ */
+
+/* >Fiubasets "palabras" -m * #
+ * busca set relacionado a las palabras, pero con # más terminos.
+ */
+ 
+/* >Fiubasets "palabra" y/o "palabras" -a "palabras"
+ * busca set relacionado a varios términos y agrega términos propuestos por el usuario, 
+ * le indica al sistema que el set resultado debe tener despues del -a.
+ */
+
+/* >Fiubasets "palabra" y/o "palabras" -d "palabras"
+ * busca set relacionado a varios términos y elimina términos propuestos por el usuario
+ * despues del -d.
+ */
 void procesarPalabras(Controlador* controlador);
 
 /* Destruye el contolador*/

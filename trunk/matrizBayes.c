@@ -59,7 +59,6 @@ Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico)
 	       Fwrite(arch2, &posicion, sizeof(int));
 	       //inicio +=2;
 	       puntero += 2;
-	       numFilas++;
 	  }
      }
      Fwrite(arch3, &comienzo, sizeof(int));
@@ -92,9 +91,10 @@ HiperParametros* BSParam(Matriz *X, double dParam){
 
      /*   m = full(sum(X,2))  */
 
-     Fread(X->inicioFila, &columnasAnterior, sizeof(int));
-
+     Fread(X->inicioFila, &columnas, sizeof(int));
+     
      for(i=0;i<X->numFilas;i++){
+	  columnasAnterior = columnas;
 	  Fread(X->inicioFila, &columnas, sizeof(int));
 	  for(j=0;j<columnas-columnasAnterior;j++){
 	       Fread(X->columnas,&posicion,sizeof(int));
@@ -198,7 +198,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 	  for(j=0;j<elementosFila;j++){
 	       Fread(X->elementos, &elem, sizeof(int));
 	       Fread(X->columnas, &columna, sizeof(int));
-	       s[columna] += w[columna]*elem;
+	       s[i] += w[columna]*elem;
 	  }
      }
 

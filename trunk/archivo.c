@@ -154,13 +154,6 @@ void Funlink(Tarch* archivo){
   }
 }
 
-uint32_t RegLength(void *reg){
-     if(reg == NULL)
-	  return 0;
-
-     return RegGetWordLength(reg)+RegGetPointersLength(reg)+2*sizeof(int);
-}
-
 uint32_t RegGetWordLength(void *reg){
      if(reg == NULL)
 	  return 0;
@@ -172,6 +165,14 @@ uint32_t RegGetPointersLength(void *reg){
 	  return 0;
      return ((int*)reg)[1];
 }
+
+uint32_t RegLength(void *reg){
+     if(reg == NULL)
+	  return 0;
+
+     return RegGetWordLength(reg)+RegGetPointersLength(reg)+2*sizeof(int);
+}
+
 
 uint32_t RegGetNumPointers(void *reg){
      if(reg == NULL)
@@ -186,10 +187,10 @@ const char* RegGetWord(void* reg){
 }
 
 uint32_t RegGetPointer(void* reg, int num){
-     if(reg != NULL || num >= RegGetNumPointers(reg))
+     if(reg == NULL || num >= RegGetNumPointers(reg))
 	  return -1;
 
-     uint32_t inicio = RegGetWordLength()+2*sizeof(int)+num*sizeof(int);
+     uint32_t inicio = RegGetWordLength(reg)+2*sizeof(int)+num*sizeof(int);
      return *((int*)(reg+inicio));
 }
 

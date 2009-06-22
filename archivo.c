@@ -153,19 +153,19 @@ void Funlink(Tarch* archivo){
   }
 }
 
-uint32_t RegGetWordLength(void *reg){
+uint32_t RegGetWordLength(const void *reg){
      if(reg == NULL)
 	  return 0;
      return ((int*)reg)[0];
 }
 
-uint32_t RegGetPointersLength(void *reg){
+uint32_t RegGetPointersLength(const void *reg){
      if(reg == NULL)
 	  return 0;
      return ((int*)reg)[1];
 }
 
-uint32_t RegLength(void *reg){
+uint32_t RegLength(const void *reg){
      if(reg == NULL)
 	  return 0;
 
@@ -173,24 +173,39 @@ uint32_t RegLength(void *reg){
 }
 
 
-uint32_t RegGetNumPointers(void *reg){
+uint32_t RegGetNumPointers(const void *reg){
      if(reg == NULL)
 	  return 0;
      return ((int*)reg)[1]/(sizeof(int));
 }
 
-const char* RegGetWord(void* reg){
+const char* RegGetWord(const void* reg){
      if(reg == NULL)
 	  return NULL;
      return (char*)reg+2*sizeof(int);
 }
 
-uint32_t RegGetPointer(void* reg, int num){
+uint32_t RegGetPointer(const void* reg, int num){
      if(reg == NULL || num >= RegGetNumPointers(reg))
 	  return -1;
 
      uint32_t inicio = RegGetWordLength(reg)+2*sizeof(int)+num*sizeof(int);
      return *((int*)(reg+inicio));
+}
+
+void* RegSetPointers(void* reg, const uint32_t* pointers, uint32_t numPointers){
+     if(reg == NULL)
+	  return NULL;
+     if(numPointers == 0)
+	  return reg;
+     if(pointers==NULL)
+	  return reg;
+
+     reg = realloc(reg,RegLength(reg)-RegGetNumPointers(reg)*sizeof(int)+numPointers*sizeof(int));
+     ((uint32_t*)reg)[1] = numPointers;
+     memcpy(reg+RegGetWordLength(reg)+2*sizeof(uint32_t), pointers, numPointers*sizeof(uint32_t));
+
+     return reg;
 }
 
 char* FreadString(Tarch* archivo){

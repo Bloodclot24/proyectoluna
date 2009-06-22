@@ -151,16 +151,18 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 	  if(fila < q->query[i]){
 	       while(fila < q->query[i]){
 		    comienzoFila += elementosFila;
-		    Fseek(X->columnas, elementosFila, SEEK_CUR);
-		    Fseek(X->elementos, elementosFila, SEEK_CUR);
 		    Fread(X->inicioFila, &elementosFila, sizeof(int));
 		    elementosFila -= comienzoFila;
 		    fila++;
 	       }
 	       repetida = 0;
+	       Fseek(X->columnas, comienzoFila*sizeof(int), SEEK_SET);
+	       Fseek(X->elementos, comienzoFila*sizeof(int), SEEK_SET);
+
 	  }
 	  else if((fila == q->query[i]) && (repetida)){
-	      
+	       Fseek(X->columnas, comienzoFila*sizeof(int), SEEK_SET);
+	       Fseek(X->elementos, comienzoFila*sizeof(int), SEEK_SET);
 	  }
 	  
 	  for(j=0;j<elementosFila;j++){

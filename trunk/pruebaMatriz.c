@@ -10,9 +10,9 @@ int main(){
      X=armarMatriz(archivo, &lexico, &punterosLexico);
 
      Query* q = (Query*)ArmarQuery(NULL,"Palabra1",lexico, punterosLexico);
-/*      ArmarQuery(q,"Palabra2",lexico, punterosLexico); */
-/*      ArmarQuery(q,"Palabra3",lexico, punterosLexico); */
-/*      ArmarQuery(q,"Palabra4",lexico, punterosLexico); */
+/*      ArmarQuery(q,"Palabra1",lexico, punterosLexico);  */
+/*      ArmarQuery(q,"Palabra1",lexico, punterosLexico);  */
+/*      ArmarQuery(q,"Palabra4",lexico, punterosLexico);  */
 /*      ArmarQuery(q,"Palabra5",lexico, punterosLexico); */
 /*      ArmarQuery(q,"Palabra6",lexico, punterosLexico); */
 /*      ArmarQuery(q,"Palabra7",lexico, punterosLexico); */

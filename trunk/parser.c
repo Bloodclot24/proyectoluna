@@ -66,7 +66,7 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
 	  bytes= Parser_Caracteres_Invalidos(texto, len);
 //	  while((!ispunct(*(texto+bytes))) && (!iscntrl(*(texto+bytes))) && (bytes < len) ){
 //	  	bytes++;
-	  	fprintf(stderr,"bytes: %i\n", bytes);
+//	  	fprintf(stderr,"bytes: %i\n", bytes);
 //	  }
 	  if(bytes == 0) /* no encontro ningun separador, avanzo*/
 	       texto++;
@@ -83,7 +83,7 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
 				parser->palabraIncompleta = 0;
 				j = parser->numAuxiliar;
 	//			fprintf(stderr,"%s, indice %i, bytes %i\n",palabra,parser->numAuxiliar,bytes);
-			//	free(parser->palabraAuxiliar);
+				free(parser->palabraAuxiliar);
 			}else{
 				palabra = (char*) malloc(bytes+1);
 				j = 0;
@@ -96,19 +96,19 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
 //		    	palabra[bytes]='\n';
 		    	int auxiliar = bytes+j;//+1;
 		    	Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
-		    	printf("%d ",auxiliar);
+//		    	printf("%d ",auxiliar);
 		    	auxiliar = sizeof(int)*2; //Tamao del par Doc,Freq
 		    	Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
-		    	printf("%d ",auxiliar);
-		    	printf("%s ",palabra);
+//		    	printf("%d ",auxiliar);
+//		    	printf("%s ",palabra);
 		    	Fwrite(parser->archivoActual, palabra, bytes+j);
 		    	auxiliar=1; // frecuencia
 		    	Fwrite(parser->archivoActual, &(parser->documentoID), sizeof(parser->documentoID));
-		    	printf("%d ",parser->documentoID);
+//		    	printf("%d ",parser->documentoID);
 		    	Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
-		    	printf("%d\n",auxiliar);
+//		    	printf("%d\n",auxiliar);
 	       }
-	    //   free(palabra);
+	       free(palabra);
 	  	}else{
 	       /* se nos termina el buffer y nos quedamos a mitad de
 			* una palabra, guardamos el fragmento para la proxima
@@ -119,7 +119,7 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
 	       strncpy(auxiliar, texto, bytes);
 	       auxiliar[bytes]='\0';
 //	       fprintf(stderr, "palabra incompleta %s \n", auxiliar);
-	      // free(auxiliar);
+	       free(auxiliar);
 	       parser->numAuxiliar = bytes;
 	       parser->palabraIncompleta = 1;
 	       int i;

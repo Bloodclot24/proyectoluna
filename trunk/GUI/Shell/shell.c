@@ -26,4 +26,14 @@ char* obtenerPalabrasShell(Shell* shell) {
 	return shell->command;
 }
 
+void mostrarTituloResultado(Shell* shell) {
+
+	printf("RESULTADOS:\n");	
+}	
+
+void mostrarPalabraShell(Shell* shell, char* palabra) {
+	
+	printf("%s\n", palabra);	
+}	
+
 void destruirShell(Shell* shell) { }

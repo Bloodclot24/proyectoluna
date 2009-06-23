@@ -1,7 +1,7 @@
 #include "controlador.h"
 
 void crearControlador(Controlador* controlador, char* argv) {
-	
+	 
 	char consola[7] = "consola";
 	
 	if(!argv) {

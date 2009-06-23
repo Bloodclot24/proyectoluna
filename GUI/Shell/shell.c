@@ -4,7 +4,7 @@ void crearShell(Shell* shell, Controlador* controlador) {
 	
 	shell->controlador= controlador;
 }
-
+ 
 void correrShell(Shell* shell) {
 	
 	int exit= 0;

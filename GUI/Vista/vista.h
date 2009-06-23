@@ -3,7 +3,7 @@
 
 #include <string.h>
 #include <gtk/gtk.h> 
-
+  
 #define PATH_VISTA "GUI/Vista/vista.glade"
 
 typedef struct Vista {

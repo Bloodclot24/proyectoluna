@@ -64,7 +64,7 @@ typedef struct Parser{
  * alocacion de memoria */
 Parser* Parser_Crear(const char* nombre, int tamanioPromedio, int particiones);
 
-/* */
+/* Guarda el lexico en registros de un formato dado */
 void Parser_GuardarLexico(Parser* parser, char* texto, int len);
 
 /* Comienza el proceso del parseo, registra el handler, y a partir de

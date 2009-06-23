@@ -8,6 +8,8 @@ typedef struct{
 	char flag;
 }Tpalabra;
 
-Tparticiones* ReplacementSelection(Tarch* archivo,int memoriaAutilizar);
+/* Ordena el archivo de "lexico"(auxiliar) obteniendo particiones de igual tamaño 
+ * de cantidad promedio de terminos en cada particion resultante igual a palabrasPromedio */
+Tparticiones* ReplacementSelection(Tarch* archivo,int palabrasPromedio);
 
 #endif /*REPLACEMENTSELECTION_H_*/

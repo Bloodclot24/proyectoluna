@@ -29,84 +29,48 @@ int Parser_Caracteres_Invalidos(char* texto, int length) {
 void Parser_GuardarLexico(Parser* parser, char* texto, int len){
      if(parser == NULL)	return ;
 
-	/*********/
-//	int j= 1;
-//	char aFiltrar[256];
-//	int contador = 0;
-//	while(j<128){
-//		
-//		strcat(aFiltrar,(char*)&j);
-//		
-//		switch(j){
-//		case 47:
-//			j= 	57;
-//			break;
-//		case 64:
-//			j= 	90;
-//			break;
-//		case 96:
-//			j= 122;
-//			break;
-//		}
-//		j++;
-//		contador++;
-//	}
-////	aFiltrar[contador] = '\0';	
-//
-//	/*************/
 
-     int /*i,*/ bytes;
+     int  bytes;
      char *inicio, *final;
 	 bytes=0;
      inicio = texto;
      final = inicio+len;
      
      while(texto < final){
-	  //bytes = strcspn(texto, /*"%_~(){}[[]]<>| ,;.:\t\b\n\'\"*+-/=$#!?\0%\\"*/strcat(aFiltrar,"%_~(){}[[]]<>| ,;.:\t\b\n\'\"*+-/=$#!?\0%\\"));
 	  bytes= Parser_Caracteres_Invalidos(texto, len);
-//	  while((!ispunct(*(texto+bytes))) && (!iscntrl(*(texto+bytes))) && (bytes < len) ){
-//	  	bytes++;
-//	  	fprintf(stderr,"bytes: %i\n", bytes);
-//	  }
 	  if(bytes == 0) /* no encontro ningun separador, avanzo*/
 	       texto++;
 	  else if(texto+bytes < final){
 	       	/* Encontre una palabra, y no termine el buffer */
-	       	/* TODO: Guardo la palabra al archivo */
-	       	/* avanzo en el archivo */
 	       	int i,j;
 	       	char *palabra = NULL;
-	       	if(parser->palabraIncompleta){
+	       	if(parser->palabraIncompleta){/* si habia una palabra incompleta, la completo */
 	       		palabra = (char*) malloc(bytes+1+parser->numAuxiliar);
 				strncpy(palabra,parser->palabraAuxiliar,parser->numAuxiliar);
 				palabra[parser->numAuxiliar]=0;
 				parser->palabraIncompleta = 0;
 				j = parser->numAuxiliar;
-	//			fprintf(stderr,"%s, indice %i, bytes %i\n",palabra,parser->numAuxiliar,bytes);
 				free(parser->palabraAuxiliar);
 			}else{
 				palabra = (char*) malloc(bytes+1);
 				j = 0;
 	       	}
+	       	/* obtengo la palabra */
 	       	for (i=0; i < bytes; i++)
 		    	palabra[i+j] = tolower(texto[i]);
 	       	palabra[bytes+j] = '\0';
 		   	/* Si no es una stopWord, la escribimos */
 	       	if((rb_find(stopWords, palabra) == NULL) && (strcspn(palabra, "-0123456789@^_%~'&") != 0)){
-//		    	palabra[bytes]='\n';
-		    	int auxiliar = bytes+j;//+1;
+		    	int auxiliar = bytes+j;
+		    	/* Formato del registro: 
+		    	 * LongitudTermino LongitudParDocFrec termino Doc-Frec */
 		    	Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
-//		    	printf("%d ",auxiliar);
 		    	auxiliar = sizeof(int)*2; //Tamao del par Doc,Freq
 		    	Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
-//		    	printf("%d ",auxiliar);
-//		    	printf("%s ",palabra);
 		    	Fwrite(parser->archivoActual, palabra, bytes+j);
 		    	auxiliar=1; // frecuencia
 		    	Fwrite(parser->archivoActual, &(parser->documentoID), sizeof(parser->documentoID));
-//		    	printf("%d ",parser->documentoID);
 		    	Fwrite(parser->archivoActual, &auxiliar, sizeof(auxiliar));
-//		    	printf("%d\n",auxiliar);
 	       }
 	       free(palabra);
 	  	}else{
@@ -118,7 +82,6 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
 	       char *auxiliar = malloc(bytes+1);
 	       strncpy(auxiliar, texto, bytes);
 	       auxiliar[bytes]='\0';
-//	       fprintf(stderr, "palabra incompleta %s \n", auxiliar);
 	       free(auxiliar);
 	       parser->numAuxiliar = bytes;
 	       parser->palabraIncompleta = 1;
@@ -161,11 +124,7 @@ static void Parser_ComenzarElemento(void *data, const xmlChar *name, const xmlCh
 	   * articulo*/
 	  parser->documentoID++;
      }
-     else if(strncmp(nombre, "text", strlen("text")) == 0){
-          /* Comienza el texto del documento */
-	  /* TODO: alguna inicializacion? */
-     }
-}
+ }
 
 /* Callback a utilizar cuando termina un elemento del XML. */
 static void Parser_FinalizarElemento(void *data, const xmlChar *name){ //, const xmlChar **attrs){

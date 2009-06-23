@@ -17,31 +17,21 @@ int compararRegistros(const void* cadena1, const void* cadena2, const void* para
 }
 
 int compararLexico(const void* cadena1, const void* cadena2, const void* parametroExtra){
-/* 	char* cad1 = (char*) cadena1; */
-/* 	char* cad2 = (char*) cadena2; */
-/* 	char* longitudString1 = (char*) malloc(sizeof(int)); */
-/* 	strncpy(longitudString1,cad1,4); */
-/* 	char* longitudString2 = (char*) malloc(sizeof(int));; */
-/* 	strncpy(longitudString2,cad2,4); */
-/* 	int longitud1 = atoi(longitudString1); */
-/* 	int longitud2 = atoi(longitudString2); */
-/* 	char* termino1 = (char*) malloc(sizeof(char)*longitud1); */
-/* 	char* termino2 = (char*) malloc(sizeof(char)*longitud2); */
-/* 	cadena1+=7; */
-/* 	strncpy(termino1,cad1,longitud1); */
-/* 	cadena2+=7; */
-/* 	strncpy(termino2,cad2,longitud2); */
-/* 	free(longitudString1); */
-/* 	free(longitudString2); */
-/* 	int resultado = strcmp(termino1,termino2); */
-/* 	free(termino1); */
-/* 	free(termino2); */
-/* 	return resultado; */
+     int resultado = strncmp(RegGetWord(cadena1),			\
+			     RegGetWord(cadena2),			\
+			     (RegGetWordLength(cadena1))>(RegGetWordLength(cadena2))? \
+			     (RegGetWordLength(cadena2)):(RegGetWordLength(cadena1)));
+     if(resultado != 0)
+	  return resultado;
 
+     if(RegGetWordLength(cadena1) > RegGetWordLength(cadena2))
+	  return 1;
+     if(RegGetWordLength(cadena1) < RegGetWordLength(cadena2))
+	  return -1;
      return strncmp(RegGetWord(cadena1),				\
 		    RegGetWord(cadena2),				\
-		    (RegGetWordLength(cadena1))>(RegGetWordLength(cadena2))?		\
-		    (RegGetWordLength(cadena2)):(RegGetWordLength(cadena1)));
+		    (RegLength(cadena1))>(RegLength(cadena2))?		\
+		    (RegLength(cadena2)-8):(RegLength(cadena1)-8));
 }
 
 Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
@@ -51,9 +41,11 @@ Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
      
      int palabrasAlmacenadas = 0;
      /* Lleno el arbol hasta la cantidad dada */
-     while(palabrasAlmacenadas <= palabrasMaximas){
+     while(palabrasAlmacenadas <= palabrasMaximas && !Feof(archivo)){
 	  char* linea;
 	  FreadReg(archivo,(void**)&linea);
+	  if(Feof(archivo))
+	     break;
 	  /* Obtengo el termino y lo agrego al arbol */
 	  rb_insert(miArbol, linea);
 	  palabrasAlmacenadas++;

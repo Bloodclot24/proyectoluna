@@ -2,6 +2,7 @@
 #define CONTROLADOR_H_
 
 #include <malloc.h>
+#include "../lista.h"
 #include "../GUI/Vista/vista.h"
 #include "../GUI/Shell/shell.h"
 

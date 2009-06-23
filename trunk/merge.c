@@ -50,26 +50,6 @@ void* mergePunteros(uint32_t* pointers, uint32_t *numPointers, void* reg){
 
      return pointers;
 }
-
-
-void imprimirTermino(void*datos){
-/*      int longTermino = ((int*)datos)[0]; */
-/*      if(longTermino<15){ */
-/* 	  char* termino = (char*)malloc(sizeof(longTermino)+1); */
-/* 	  //strncpy(termino,((char*)datos+8),longTermino); */
-/* 	  memcpy(termino,((char*)datos+8),longTermino); */
-/* 	  termino[longTermino]='\0'; */
-/* 	  printf("Longitud: %i  ",longTermino);	 */
-/* 	  printf("Termino: %s Punteros: %i ->",termino,RegGetNumPointers(datos)); */
-/* 	  int i=0; */
-/* 	  for(i=0;i<RegGetNumPointers(datos);i++){ */
-/* 	       printf(" %i ", RegGetPointer(datos,i)); */
-/* 	  } */
-/* 	  printf("\n"); */
-/* 	  //free(termino); */
-/* 	  termino=NULL; */
-/*      } */
-}
  
 int compararTerminos(const void* cadena1, const void* cadena2, const void* parametroExtra){
 
@@ -173,20 +153,10 @@ Tarch* mergeLexico(Tparticiones *Gparticion, int cantidad){
 		    punteros = mergePunteros(punteros, &cantidadPunteros, menor);
 		    if(menor!=auxMenor)
 			 free(menor);
-		    imprimirTermino(menor);
-		    imprimirTermino(auxMenor);
-		    printf("Cantidad de punteros: %i   ", cantidadPunteros);
-		    int i;
-		    for(i=0;i<cantidadPunteros;i++){
-			 printf("%i ",punteros[i]);
 		    }
-		    printf("\n******************************************************************\n");
-	       }
 	       else{
 		    auxMenor = RegSetPointers((void*)auxMenor, punteros, cantidadPunteros);
 		    FwriteReg(archFinal, auxMenor);
-		    imprimirTermino(auxMenor);
-		    printf("------------------------------------------------------------------==================================\n");
 		    free(auxMenor);
 		    free(punteros);
 		    auxMenor=menor;
@@ -194,18 +164,11 @@ Tarch* mergeLexico(Tparticiones *Gparticion, int cantidad){
 		    cantidadPunteros = 0;
 		    punteros = mergePunteros(punteros, &cantidadPunteros, menor);
 	       }
-	       //-------------------------------------------------
-   		
-	       //Fwrite(archFinal, menor, strlen(menor));
-	       //>FwriteReg(archFinal, menor);
-	       //imprimirTermino(menor);
-	       //FreadLn(archivo[posMenor], (void**)&palabraAComparar[posMenor]);
 	       FreadReg(archivo[posMenor], (void**)&palabraAComparar[posMenor]);
 
 	       if((Feof(archivo[posMenor]))||(palabraAComparar[posMenor]==NULL)){
-		    printf("termino el archivo: %i \n",posMenor);
 		    Eof[posMenor]= '1';
-		    //Funlink(archivo[posMenor]);/* llego a EOF, el archivo no sirve mas, lo borro*/
+		    Funlink(archivo[posMenor]);/* llego a EOF, el archivo no sirve mas, lo borro*/
 		    nEof++;
 	       }
 	  }//fin del while de las n particiones.

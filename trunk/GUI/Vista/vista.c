@@ -3,7 +3,7 @@
 void crearVista(Vista* vista, Controlador* controlador) {
 
    	vista->controlador= controlador;
-	
+	 
 	GError*	error= NULL; 
 	vista->builder= gtk_builder_new();
    	if(!gtk_builder_add_from_file(vista->builder, PATH_VISTA, &error))

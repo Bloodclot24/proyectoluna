@@ -202,7 +202,7 @@ void* RegSetPointers(void* reg, const uint32_t* pointers, uint32_t numPointers){
 	  return reg;
 
      reg = realloc(reg,RegLength(reg)-RegGetNumPointers(reg)*sizeof(int)+numPointers*sizeof(int));
-     ((uint32_t*)reg)[1] = numPointers;
+     ((uint32_t*)reg)[1] = numPointers*sizeof(uint32_t);
      memcpy(reg+RegGetWordLength(reg)+2*sizeof(uint32_t), pointers, numPointers*sizeof(uint32_t));
 
      return reg;

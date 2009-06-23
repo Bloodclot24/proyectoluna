@@ -11,7 +11,7 @@ void* mergePunteros(uint32_t* pointers, uint32_t *numPointers, void* reg){
 	  return pointers;
      }
      int finalizado = 0;
-     int j;
+     int j=0;
 
      while(!finalizado){
 	  if(pointers[i] < RegGetPointer(reg,j)){
@@ -19,26 +19,32 @@ void* mergePunteros(uint32_t* pointers, uint32_t *numPointers, void* reg){
 	  }else if(pointers[i] > RegGetPointer(reg,j)){
 	       void* newPointers=malloc((*numPointers+2)*sizeof(uint32_t));
 	       memcpy(newPointers, pointers, i*sizeof(uint32_t));
-	       memcpy(newPointers+(i+2)*sizeof(uint32_t), pointers+(i)*sizeof(uint32_t), (*numPointers-i)*sizeof(uint32_t));
+	       memcpy(newPointers+(i+2)*sizeof(uint32_t), pointers+i, ((*numPointers)-i)*sizeof(uint32_t));
 	       free(pointers);
 	       pointers = newPointers;
 	       
 	       pointers[i++]=RegGetPointer(reg,j++);
-	       *numPointers++;
+	       (*numPointers)++;
 	       pointers[i++]=RegGetPointer(reg,j++);
-	       *numPointers++;
+	       (*numPointers)++;
 	  }else {//((uint32_t*)pointers[i] == RegGetPointer(reg,j))
 	       i++;
 	       j++;
-	       pointers[i] += RegGetPointer(reg,j);
+	       pointers[i++] += RegGetPointer(reg,j++);
 	  }
 
-	  if(i == *numPointers || j == RegGetNumPointers(reg))
+	  if(i+1 >= *numPointers || j+1 >= RegGetNumPointers(reg))
 	       finalizado = 1;
      }
 
-     if(j < RegGetNumPointers(reg)){
-	  
+     if(j+1 < RegGetNumPointers(reg)){
+	  pointers = realloc(pointers, *(numPointers)*sizeof(uint32_t)+(RegGetNumPointers(reg)-j)*sizeof(uint32_t));
+	  while(j<RegGetNumPointers(reg)){
+	       pointers[i++]=RegGetPointer(reg,j++);
+	       (*numPointers)++;
+	       pointers[i++]=RegGetPointer(reg,j++);
+	       (*numPointers)++;
+	  }
      }
 
 
@@ -47,24 +53,38 @@ void* mergePunteros(uint32_t* pointers, uint32_t *numPointers, void* reg){
 
 
 void imprimirTermino(void*datos){
-     int longTermino = ((int*)datos)[0];
-     if(longTermino<15){
-	  char* termino = (char*)malloc(sizeof(longTermino)+1);
-	  //strncpy(termino,((char*)datos+8),longTermino);
-	  memcpy(termino,((char*)datos+8),longTermino);
-	  termino[longTermino]='\0';
-	  printf("Longitud: %i  ",longTermino);	
-	  printf("Termino: %s \n",termino);	
-	  //free(termino);
-	  termino=NULL;
-     }
+/*      int longTermino = ((int*)datos)[0]; */
+/*      if(longTermino<15){ */
+/* 	  char* termino = (char*)malloc(sizeof(longTermino)+1); */
+/* 	  //strncpy(termino,((char*)datos+8),longTermino); */
+/* 	  memcpy(termino,((char*)datos+8),longTermino); */
+/* 	  termino[longTermino]='\0'; */
+/* 	  printf("Longitud: %i  ",longTermino);	 */
+/* 	  printf("Termino: %s Punteros: %i ->",termino,RegGetNumPointers(datos)); */
+/* 	  int i=0; */
+/* 	  for(i=0;i<RegGetNumPointers(datos);i++){ */
+/* 	       printf(" %i ", RegGetPointer(datos,i)); */
+/* 	  } */
+/* 	  printf("\n"); */
+/* 	  //free(termino); */
+/* 	  termino=NULL; */
+/*      } */
 }
  
 int compararTerminos(const void* cadena1, const void* cadena2, const void* parametroExtra){
-     return strncmp(RegGetWord(cadena1),				\
-		    RegGetWord(cadena1),				 \
-		    RegGetWordLength(cadena1)<RegGetWordLength(cadena2)? \
-		    RegGetWordLength(cadena1):RegGetWordLength(cadena2));
+
+     int resultado = strncmp(RegGetWord(cadena1),			\
+			     RegGetWord(cadena2),			\
+			     (RegGetWordLength(cadena1))>(RegGetWordLength(cadena2))? \
+			     (RegGetWordLength(cadena2)):(RegGetWordLength(cadena1)));
+     if(resultado != 0)
+	  return resultado;
+
+     if(RegGetWordLength(cadena1) > RegGetWordLength(cadena2))
+	  return 1;
+     if(RegGetWordLength(cadena1) < RegGetWordLength(cadena2))
+	  return -1;
+     return 0;
 }
 
 Tarch* mergeLexico(Tparticiones *Gparticion, int cantidad){
@@ -82,13 +102,13 @@ Tarch* mergeLexico(Tparticiones *Gparticion, int cantidad){
      int i;
      int posMenor=0;
      unsigned int nEof=0;  // cantidad de particiones que llegaron a EOF
-     char* menor ="\0";   // Termino menor
+     char* menor ="\0";    // Termino menor
      char* Eof = (char*) malloc(n*sizeof(char));
      char** palabraAComparar = (char**)malloc(n*sizeof(char*));
      Tarch **archivo = (Tarch**)malloc(n*sizeof(Tarch*));
      int contador=0;
      Tarch *archFinal;
-	
+     
      uint32_t* punteros=NULL;
      int cantidadPunteros=0;
 
@@ -147,34 +167,45 @@ Tarch* mergeLexico(Tparticiones *Gparticion, int cantidad){
 		    cantidadPunteros = 0;
 	       }
 
+
+
 	       if(compararTerminos(menor, auxMenor,0)==0 ){
 		    punteros = mergePunteros(punteros, &cantidadPunteros, menor);
 		    if(menor!=auxMenor)
 			 free(menor);
+		    imprimirTermino(menor);
+		    imprimirTermino(auxMenor);
+		    printf("Cantidad de punteros: %i   ", cantidadPunteros);
+		    int i;
+		    for(i=0;i<cantidadPunteros;i++){
+			 printf("%i ",punteros[i]);
+		    }
+		    printf("\n******************************************************************\n");
 	       }
 	       else{
 		    auxMenor = RegSetPointers((void*)auxMenor, punteros, cantidadPunteros);
 		    FwriteReg(archFinal, auxMenor);
+		    imprimirTermino(auxMenor);
+		    printf("------------------------------------------------------------------==================================\n");
 		    free(auxMenor);
 		    free(punteros);
-
 		    auxMenor=menor;
 		    punteros=NULL;
 		    cantidadPunteros = 0;
 		    punteros = mergePunteros(punteros, &cantidadPunteros, menor);
-	       }  
-	       //-------------------------------------------------   
+	       }
+	       //-------------------------------------------------
    		
 	       //Fwrite(archFinal, menor, strlen(menor));
 	       //>FwriteReg(archFinal, menor);
 	       //imprimirTermino(menor);
 	       //FreadLn(archivo[posMenor], (void**)&palabraAComparar[posMenor]);
 	       FreadReg(archivo[posMenor], (void**)&palabraAComparar[posMenor]);
-	       	
+
 	       if((Feof(archivo[posMenor]))||(palabraAComparar[posMenor]==NULL)){
 		    printf("termino el archivo: %i \n",posMenor);
 		    Eof[posMenor]= '1';
-		    Funlink(archivo[posMenor]);/* llego a EOF, el archivo no sirve mas, lo borro*/
+		    //Funlink(archivo[posMenor]);/* llego a EOF, el archivo no sirve mas, lo borro*/
 		    nEof++;
 	       }
 	  }//fin del while de las n particiones.
@@ -186,14 +217,14 @@ Tarch* mergeLexico(Tparticiones *Gparticion, int cantidad){
 	  agregarParticion(nuevoGrupo, archFinal);
 	  nEof=0;
      }//fin del while de todo el grupo de particiones.
-     free(menor);
-     free(Eof);
+//     free(menor);
+//     free(Eof);
 	
      //for(i=0; i<n;i++) free(archivo[i]);
-     free(archivo);
+     //free(archivo);
     
      for(i=0; i<n;i++) free(palabraAComparar[i]);
-     free(palabraAComparar);
+     //free(palabraAComparar);
     
      eliminarParticiones(Gparticion);
      if(nuevoGrupo->cantidad > 1){

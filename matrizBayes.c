@@ -124,9 +124,9 @@ HiperParametros* BSParam(Matriz *X, double dParam){
 double* BSets(Matriz *X, Query* q, HiperParametros *param){
      int n=q->elementos;
 
-     double* c = (double*)malloc(sizeof(double)*X->numFilas);
+     double* c = (double*)malloc(sizeof(double)*X->numColumnas);
 
-     memset(c,0,sizeof(double)*X->numFilas);
+     memset(c,0,sizeof(double)*X->numColumnas);
 
      int i,j;
      int fila=0;
@@ -171,7 +171,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
      
      /* w = log(1 + c ./ alpha) - log(1 + (n - c) ./ beta); */
 
-     for(i=0;i<X->numFilas;i++)
+     for(i=0;i<X->numColumnas;i++)
 	  w[i] = log(1+c[i] / param->alpha[i]) - log(1+(n-c[i]) / param->beta[i]);
 
      Frewind(X->elementos);

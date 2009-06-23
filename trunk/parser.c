@@ -38,7 +38,8 @@ void Parser_GuardarLexico(Parser* parser, char* texto, int len){
      
      while(texto < final){
 	  bytes= Parser_Caracteres_Invalidos(texto, len);
-	  if(bytes == 0) /* no encontro ningun separador, avanzo*/
+	  
+	  if(bytes == 0 && !parser->palabraIncompleta) /* no encontro ningun separador, avanzo*/
 	       texto++;
 	  else if(texto+bytes < final){
 	       	/* Encontre una palabra, y no termine el buffer */

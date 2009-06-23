@@ -2,7 +2,12 @@
 <interface>
   <requires lib="gtk+" version="2.14"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkListStore" id="liststore_results"/>
+  <object class="GtkListStore" id="liststore_results">
+    <columns>
+      <!-- column-name results -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="window">
     <property name="title" translatable="yes">Proyecto Luna</property>
     <property name="window_position">center-always</property>
@@ -16,7 +21,6 @@
         <child>
           <object class="GtkStatusbar" id="statusbar_left">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <property name="spacing">2</property>
             <property name="has_resize_grip">False</property>
           </object>
@@ -30,7 +34,6 @@
         <child>
           <object class="GtkStatusbar" id="statusbar_right">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <property name="spacing">2</property>
             <property name="has_resize_grip">False</property>
           </object>
@@ -54,19 +57,6 @@
             <property name="bottom_attach">10</property>
             <property name="x_options">GTK_FILL</property>
             <property name="y_options">GTK_FILL</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkTreeView" id="treeview_results">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="model">liststore_results</property>
-          </object>
-          <packing>
-            <property name="left_attach">2</property>
-            <property name="right_attach">4</property>
-            <property name="top_attach">6</property>
-            <property name="bottom_attach">9</property>
           </packing>
         </child>
         <child>
@@ -116,7 +106,6 @@
               <object class="GtkEntry" id="entry_words">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="invisible_char">&#x25CF;</property>
               </object>
               <packing>
                 <property name="position">1</property>
@@ -189,6 +178,40 @@
             <property name="bottom_attach">2</property>
             <property name="x_options">GTK_FILL</property>
             <property name="y_options">GTK_FILL</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="scrolledwindow1">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+            <child>
+              <object class="GtkTreeView" id="treeview_results1">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="model">liststore_results</property>
+                <property name="headers_clickable">False</property>
+                <property name="search_column">0</property>
+                <child>
+                  <object class="GtkTreeViewColumn" id="columna1">
+                    <property name="title">Resultados:</property>
+                    <child>
+                      <object class="GtkCellRendererText" id="texto_columna1"/>
+                      <attributes>
+                        <attribute name="text">0</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="left_attach">2</property>
+            <property name="right_attach">4</property>
+            <property name="top_attach">6</property>
+            <property name="bottom_attach">9</property>
           </packing>
         </child>
       </object>

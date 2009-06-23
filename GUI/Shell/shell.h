@@ -21,6 +21,12 @@ void correrShell(Shell* shell);
 /* Devuelve las palabras ingresadas */
 char* obtenerPalabrasShell(Shell* shell);
 
+/* Muestra titulo resultado */
+void mostrarTituloResultado(Shell* shell);	
+
+/* Muestra una palabra resultado */
+void mostrarPalabraShell(Shell* shell, char* palabra);	
+
 /* Destruye el shell */
 void destruirShell(Shell* shell);
 

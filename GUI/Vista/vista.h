@@ -22,6 +22,9 @@ void correrVista(Vista* vista);
 /* Devuelve las palabras ingresadas */
 char* obtenerPalabrasVista(Vista* vista);
 
+/* Muestra una palabra resultado */
+void mostrarPalabraVista(Vista* vista, char* palabra);	
+
 /* Destruye la vista */
 void destruirVista(Vista* vista);
 

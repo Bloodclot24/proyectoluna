@@ -23,44 +23,81 @@ void correr(Controlador* controlador) {
 		correrVista(controlador->vista);	
 }
 
-void procesarPalabras(Controlador* controlador) {
+Datos* procesarPalabras(Controlador* controlador) {
 	
+	Datos* datos= (Datos*) malloc(sizeof(Datos));
+	datos->modificar= nada;
+		
 	char* palabras= NULL;
 	if(controlador->console)
 		palabras= obtenerPalabrasShell(controlador->shell);		
 	else
 		palabras= obtenerPalabrasVista(controlador->vista);	
 	
-	printf("Palabras a procesar %s", palabras);
-	
-	Lista* lista= Lista_Crear();
+	char separadores[7]= " *\"\n\t";
+	datos->lista= Lista_Crear();
+	datos->listaModificar= Lista_Crear();
     char* palabra;
-    int bytes= 0;
-    int inicioPalabra= 0;
-    int lenght= strlen(palabras);
-     
-    while(bytes <= lenght){
-     	if(palabras[bytes] == ' ' || bytes == lenght) {
-     		palabra= (char*) malloc(bytes-inicioPalabra);
-     		strncpy(palabra, palabras, bytes-inicioPalabra);
-     		printf("Palabra: %s\n", palabra);
-     		printf("Largo palabra: %d\n", bytes-inicioPalabra);
-     		
-     		inicioPalabra= bytes+1;
-     		Lista_Insertar(lista, palabra);
-     		palabras+= (bytes+1);
-     	}
-     	
-     	printf("Caracter: %s\n", palabras);
-     	printf("Bytes: %d\n", bytes);
-     	bytes++;
-     }
-     
-     while(!Lista_EstaVacia(lista)) {
+	int cantResultados;
+	int modificar= 0;
+	
+  	palabra= strtok(palabras, separadores);
+	Lista_Insertar(datos->lista, palabra);
+ 	
+ 	while((palabra= strtok(NULL, separadores)) != NULL) {
+	   	
+		if((cantResultados= atoi(palabra)) == 0) {
+			if(strcmp(palabra, "-m") != 0 && strcmp(palabra, "-a") != 0 
+			   && strcmp(palabra, "-d") != 0 && !modificar)
+ 				Lista_Insertar(datos->lista, palabra);
+ 				
+			else if(strcmp(palabra, "-a") == 0) {
+				datos->modificar= agregar;
+				modificar= 1;
+			} else if(strcmp(palabra, "-d") == 0) {
+				datos->modificar= eliminar;
+				modificar= 1;
+			} else if(strcmp(palabra, "-m") == 0)
+				datos->modificar= multiplicar;
+			else
+				Lista_Insertar(datos->listaModificar, palabra);	
+		} else
+			datos->cantResultados= cantResultados;
+   	}
+  	
+//  	/*PRUEBAS*/
+//  	while(!Lista_EstaVacia(datos->lista)) {
+//     	char* palabra= (char*) Lista_PrimerElemento(datos->lista);
+//    	Lista_RemoverPrimero(datos->lista);
+//     	//printf("Palabra Lista: %s\n", palabra);
+//     }
+//
+//	printf("Modificar: %d\n", datos->modificar);
+//   	printf("Cant Resultados: %d\n", datos->cantResultados);
+//   	
+//   	while(!Lista_EstaVacia(datos->listaModificar)) {
+//     	char* palabra= (char*) Lista_PrimerElemento(datos->listaModificar);
+//    	Lista_RemoverPrimero(datos->listaModificar);
+//     	mostrarPalabraVista(controlador->vista, palabra);	 
+//     }
+//     
+
+	return(datos);
+}
+
+void mostrarPalabraResultados(Controlador* controlador, Lista* lista) {
+	
+	while(!Lista_EstaVacia(lista)) {
      	char* palabra= (char*) Lista_PrimerElemento(lista);
-     	Lista_RemoverPrimero(lista);
-   		printf("Palabra Lista: %s\n", palabra);
-     }
+
+     	if(controlador->console) {
+     		mostrarTituloResultado(controlador->shell);	
+			mostrarPalabraShell(controlador->shell, palabra);		
+     	} else
+			mostrarPalabraVista(controlador->vista, palabra);
+		
+		Lista_RemoverPrimero(lista);
+     }	
 }
 
 void destruirControlador(Controlador* controlador) {

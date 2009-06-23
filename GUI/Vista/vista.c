@@ -41,4 +41,13 @@ char* obtenerPalabrasVista(Vista* vista) {
 	return (char*)gtk_entry_get_text(entryWords);
 }
 
+void mostrarPalabraVista(Vista* vista, char* palabra) {
+	
+	GtkListStore *listStore;
+	listStore= GTK_LIST_STORE(gtk_builder_get_object(vista->builder, "liststore_results"));
+	GtkTreeIter iter;
+	gtk_list_store_append(listStore, &iter);
+	gtk_list_store_set(listStore, &iter, 0, palabra, -1);
+}
+
 void destruirVista(Vista* vista) { }

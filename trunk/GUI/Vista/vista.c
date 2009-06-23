@@ -4,13 +4,14 @@ void crearVista(Vista* vista, Controlador* controlador) {
 
    	vista->controlador= controlador;
 	
+	GError*	error= NULL; 
 	vista->builder= gtk_builder_new();
-   	gtk_builder_add_from_file(vista->builder, PATH_VISTA, NULL);
+   	if(!gtk_builder_add_from_file(vista->builder, PATH_VISTA, &error))
+   		printf("Error: %s\n", error->message);
 }
 
 void connect_accept(GtkWidget *widget, Vista* vista) {
 	
-	printf("Hola Guido!!");
 	procesarPalabras(vista->controlador);
 }
 

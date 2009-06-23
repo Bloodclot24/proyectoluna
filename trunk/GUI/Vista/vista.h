@@ -4,7 +4,7 @@
 #include <string.h>
 #include <gtk/gtk.h> 
 
-#define PATH_VISTA "vista.glade"
+#define PATH_VISTA "GUI/Vista/vista.glade"
 
 typedef struct Vista {
      GtkBuilder* builder;

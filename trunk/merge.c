@@ -195,6 +195,7 @@ Tarch* mergeLexico(Tparticiones *Gparticion, int cantidad){
      else{
 	  Tarch* final = obtenerParticion(nuevoGrupo);
 	  eliminarParticiones(nuevoGrupo);
+	  Frewind(final);
 	  return final;
      }
 }

@@ -12,6 +12,7 @@
 #define PLEXICO "_punterosLexico"
 #define HIPERPARAM "_hiperParam"
 
+#define QUERY_ELEM_UNIT 5
 
 typedef struct {
      Tarch *elementos, *columnas, *inicioFila;
@@ -27,6 +28,10 @@ typedef struct{
 typedef struct{
      int* query;
      int elementos;
+     int* agregar;
+     int cantidadAgregar;
+     int* sacar;
+     int cantidadSacar;
 }Query;
 
 /* Arma una matriz segun el archivo auxiliar */

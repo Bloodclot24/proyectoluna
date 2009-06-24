@@ -44,11 +44,11 @@ Tparticiones* ReplacementSelection(Tarch* archivo, int palabrasMaximas){
      while(palabrasAlmacenadas <= palabrasMaximas && !Feof(archivo)){
 	  char* linea;
 	  FreadReg(archivo,(void**)&linea);
-	  if(Feof(archivo))
-	     break;
-	  /* Obtengo el termino y lo agrego al arbol */
-	  rb_insert(miArbol, linea);
-	  palabrasAlmacenadas++;
+	  if(!Feof(archivo)){
+	     /* Obtengo el termino y lo agrego al arbol */
+	     rb_insert(miArbol, linea);
+	     palabrasAlmacenadas++;
+	  }
      }
      
 

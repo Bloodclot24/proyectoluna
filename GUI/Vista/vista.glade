@@ -9,42 +9,16 @@
     </columns>
   </object>
   <object class="GtkWindow" id="window">
-    <property name="title" translatable="yes">Proyecto Luna</property>
+    <property name="title" translatable="yes">~ Proyecto Agua ~</property>
     <property name="window_position">center-always</property>
     <property name="default_width">750</property>
     <property name="default_height">750</property>
+    <property name="icon">logo.png</property>
     <child>
       <object class="GtkTable" id="table_general">
         <property name="visible">True</property>
         <property name="n_rows">10</property>
         <property name="n_columns">6</property>
-        <child>
-          <object class="GtkStatusbar" id="statusbar_left">
-            <property name="visible">True</property>
-            <property name="spacing">2</property>
-            <property name="has_resize_grip">False</property>
-          </object>
-          <packing>
-            <property name="right_attach">2</property>
-            <property name="top_attach">2</property>
-            <property name="bottom_attach">9</property>
-            <property name="y_options">GTK_FILL</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkStatusbar" id="statusbar_right">
-            <property name="visible">True</property>
-            <property name="spacing">2</property>
-            <property name="has_resize_grip">False</property>
-          </object>
-          <packing>
-            <property name="left_attach">4</property>
-            <property name="right_attach">6</property>
-            <property name="top_attach">2</property>
-            <property name="bottom_attach">9</property>
-            <property name="y_options">GTK_FILL</property>
-          </packing>
-        </child>
         <child>
           <object class="GtkStatusbar" id="statusbar_down">
             <property name="visible">True</property>
@@ -63,34 +37,22 @@
           <object class="GtkLabel" id="label_description">
             <property name="visible">True</property>
             <property name="xalign">0.0099999997764825821</property>
-            <property name="label" translatable="yes">Ingrese un grupo de palabras, separada por espacios</property>
+            <property name="label" translatable="yes">A continuaci&#xF3;n, ingrese un grupo de palabras separadas por espacios.</property>
           </object>
           <packing>
-            <property name="left_attach">2</property>
-            <property name="right_attach">4</property>
+            <property name="right_attach">6</property>
             <property name="top_attach">3</property>
             <property name="bottom_attach">4</property>
             <property name="x_options">GTK_FILL</property>
             <property name="y_options">GTK_FILL</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkStatusbar" id="statusbar_middle">
-            <property name="visible">True</property>
-            <property name="has_resize_grip">False</property>
-          </object>
-          <packing>
-            <property name="left_attach">2</property>
-            <property name="right_attach">4</property>
-            <property name="top_attach">5</property>
-            <property name="bottom_attach">6</property>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options">GTK_FILL</property>
+            <property name="x_padding">30</property>
+            <property name="y_padding">5</property>
           </packing>
         </child>
         <child>
           <object class="GtkHBox" id="hbox_words">
             <property name="visible">True</property>
+            <property name="border_width">2</property>
             <child>
               <object class="GtkLabel" id="label_words">
                 <property name="visible">True</property>
@@ -106,6 +68,7 @@
               <object class="GtkEntry" id="entry_words">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="max_length">300</property>
               </object>
               <packing>
                 <property name="position">1</property>
@@ -113,12 +76,13 @@
             </child>
             <child>
               <object class="GtkButton" id="button_accept">
-                <property name="label" translatable="yes">Aceptar</property>
+                <property name="label" translatable="yes">Buscar</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
               </object>
               <packing>
+                <property name="expand">False</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -130,74 +94,28 @@
             <property name="bottom_attach">5</property>
             <property name="x_options">GTK_FILL</property>
             <property name="y_options">GTK_FILL</property>
+            <property name="y_padding">6</property>
           </packing>
         </child>
         <child>
-          <object class="GtkStatusbar" id="statusbar_up">
-            <property name="visible">True</property>
-            <property name="has_resize_grip">False</property>
-          </object>
-          <packing>
-            <property name="left_attach">2</property>
-            <property name="right_attach">4</property>
-            <property name="top_attach">2</property>
-            <property name="bottom_attach">3</property>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options">GTK_FILL</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkHBox" id="hbox_title">
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkImage" id="image_title">
-                <property name="visible">True</property>
-                <property name="xalign">0.05000000074505806</property>
-                <property name="xpad">8</property>
-                <property name="ypad">8</property>
-                <property name="pixbuf">logo.png</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label_title">
-                <property name="visible">True</property>
-                <property name="xalign">0.05000000074505806</property>
-                <property name="label" translatable="yes">Proyecto Luna</property>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="right_attach">6</property>
-            <property name="bottom_attach">2</property>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options">GTK_FILL</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkScrolledWindow" id="scrolledwindow1">
+          <object class="GtkScrolledWindow" id="scrolledwindow_results">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="border_width">2</property>
             <property name="hscrollbar_policy">automatic</property>
             <property name="vscrollbar_policy">automatic</property>
             <child>
-              <object class="GtkTreeView" id="treeview_results1">
+              <object class="GtkTreeView" id="treeview_results">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="model">liststore_results</property>
                 <property name="headers_clickable">False</property>
                 <property name="search_column">0</property>
                 <child>
-                  <object class="GtkTreeViewColumn" id="columna1">
+                  <object class="GtkTreeViewColumn" id="columna_results">
                     <property name="title">Resultados:</property>
                     <child>
-                      <object class="GtkCellRendererText" id="texto_columna1"/>
+                      <object class="GtkCellRendererText" id="texto_columna"/>
                       <attributes>
                         <attribute name="text">0</attribute>
                       </attributes>
@@ -211,8 +129,137 @@
             <property name="left_attach">2</property>
             <property name="right_attach">4</property>
             <property name="top_attach">6</property>
-            <property name="bottom_attach">9</property>
+            <property name="bottom_attach">8</property>
           </packing>
+        </child>
+        <child>
+          <object class="GtkFrame" id="frame_title">
+            <property name="visible">True</property>
+            <property name="label_xalign">0</property>
+            <property name="shadow_type">none</property>
+            <child>
+              <object class="GtkHBox" id="hbox_title">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkImage" id="image_title">
+                    <property name="visible">True</property>
+                    <property name="xalign">0.05000000074505806</property>
+                    <property name="xpad">8</property>
+                    <property name="ypad">8</property>
+                    <property name="pixbuf">logo.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label_title">
+                    <property name="visible">True</property>
+                    <property name="xalign">0.05000000074505806</property>
+                    <property name="label" translatable="yes">&lt;b&gt;~ Proyecto Agua ~&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+            <child type="label_item">
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="right_attach">6</property>
+            <property name="bottom_attach">2</property>
+            <property name="x_options">GTK_FILL</property>
+            <property name="y_options">GTK_FILL</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHSeparator" id="hseparator">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="right_attach">6</property>
+            <property name="top_attach">2</property>
+            <property name="bottom_attach">3</property>
+            <property name="x_options">GTK_FILL</property>
+            <property name="y_options">GTK_FILL</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
         </child>
       </object>
     </child>

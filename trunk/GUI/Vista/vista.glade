@@ -13,11 +13,11 @@
     <property name="window_position">center-always</property>
     <property name="default_width">750</property>
     <property name="default_height">750</property>
-    <property name="icon">logo.png</property>
+    <property name="icon">agua.gif</property>
     <child>
       <object class="GtkTable" id="table_general">
         <property name="visible">True</property>
-        <property name="n_rows">10</property>
+        <property name="n_rows">11</property>
         <property name="n_columns">6</property>
         <child>
           <object class="GtkStatusbar" id="statusbar_down">
@@ -27,8 +27,8 @@
           </object>
           <packing>
             <property name="right_attach">6</property>
-            <property name="top_attach">9</property>
-            <property name="bottom_attach">10</property>
+            <property name="top_attach">10</property>
+            <property name="bottom_attach">11</property>
             <property name="x_options">GTK_FILL</property>
             <property name="y_options">GTK_FILL</property>
           </packing>
@@ -74,18 +74,6 @@
                 <property name="position">1</property>
               </packing>
             </child>
-            <child>
-              <object class="GtkButton" id="button_accept">
-                <property name="label" translatable="yes">Buscar</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -128,8 +116,94 @@
           <packing>
             <property name="left_attach">2</property>
             <property name="right_attach">4</property>
+            <property name="top_attach">9</property>
+            <property name="bottom_attach">10</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHSeparator" id="hseparator">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="right_attach">6</property>
+            <property name="top_attach">2</property>
+            <property name="bottom_attach">3</property>
+            <property name="x_options">GTK_FILL</property>
+            <property name="y_options">GTK_FILL</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="hbox_add">
+            <property name="visible">True</property>
+            <property name="border_width">2</property>
+            <child>
+              <object class="GtkLabel" id="label_add">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Palabras a Agregar: </property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="entry_add">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="max_length">300</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="left_attach">2</property>
+            <property name="right_attach">4</property>
+            <property name="top_attach">5</property>
+            <property name="bottom_attach">6</property>
+            <property name="x_options">GTK_FILL</property>
+            <property name="y_options">GTK_FILL</property>
+            <property name="y_padding">6</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="hbox_delete">
+            <property name="visible">True</property>
+            <property name="border_width">2</property>
+            <child>
+              <object class="GtkLabel" id="label_delete">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Palabras a Quitar: </property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="entry_delete">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="max_length">300</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="left_attach">2</property>
+            <property name="right_attach">4</property>
             <property name="top_attach">6</property>
-            <property name="bottom_attach">8</property>
+            <property name="bottom_attach">7</property>
+            <property name="x_options">GTK_FILL</property>
+            <property name="y_options">GTK_FILL</property>
+            <property name="y_padding">6</property>
           </packing>
         </child>
         <child>
@@ -146,7 +220,7 @@
                     <property name="xalign">0.05000000074505806</property>
                     <property name="xpad">8</property>
                     <property name="ypad">8</property>
-                    <property name="pixbuf">logo.png</property>
+                    <property name="pixbuf">agua.gif</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -178,15 +252,57 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHSeparator" id="hseparator">
+          <object class="GtkLabel" id="label_error">
             <property name="visible">True</property>
+            <property name="width_chars">16</property>
           </object>
           <packing>
-            <property name="right_attach">6</property>
-            <property name="top_attach">2</property>
-            <property name="bottom_attach">3</property>
+            <property name="left_attach">2</property>
+            <property name="right_attach">4</property>
+            <property name="top_attach">8</property>
+            <property name="bottom_attach">9</property>
             <property name="x_options">GTK_FILL</property>
             <property name="y_options">GTK_FILL</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkVBox" id="vbox_buttons">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <property name="homogeneous">True</property>
+            <child>
+              <object class="GtkButton" id="button_accept">
+                <property name="label" translatable="yes">Buscar</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="border_width">2</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="button_clear">
+                <property name="label" translatable="yes">Borrar</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="border_width">2</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="left_attach">4</property>
+            <property name="right_attach">5</property>
+            <property name="top_attach">5</property>
+            <property name="bottom_attach">6</property>
+            <property name="x_options">GTK_FILL</property>
+            <property name="y_options">GTK_FILL</property>
+            <property name="x_padding">5</property>
           </packing>
         </child>
         <child>
@@ -260,6 +376,155 @@
         </child>
         <child>
           <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkDialog" id="dialog_not_found">
+    <property name="border_width">5</property>
+    <property name="type">popup</property>
+    <property name="title" translatable="yes">404</property>
+    <property name="resizable">False</property>
+    <property name="modal">True</property>
+    <property name="window_position">center</property>
+    <property name="default_width">250</property>
+    <property name="default_height">250</property>
+    <property name="type_hint">dialog</property>
+    <property name="has_separator">False</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox2">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child>
+          <object class="GtkHBox" id="hbox_not_found">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkImage" id="image_not_found">
+                <property name="visible">True</property>
+                <property name="pixbuf">linux_not_found.png</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label_not_found">
+                <property name="visible">True</property>
+                <property name="xalign">0.05000000074505806</property>
+                <property name="label" translatable="yes">&lt;b&gt; No se han encontrado resultados. 
+Intente otra consulta.&lt;/b&gt;
+</property>
+                <property name="use_markup">True</property>
+                <property name="justify">center</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area2">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <object class="GtkButton" id="button_close">
+                <property name="label" translatable="yes">gtk-close</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="0">button_close</action-widget>
+    </action-widgets>
+  </object>
+  <object class="GtkDialog" id="dialog_fun">
+    <property name="border_width">5</property>
+    <property name="type">popup</property>
+    <property name="title" translatable="yes">Espere...</property>
+    <property name="window_position">center</property>
+    <property name="default_width">250</property>
+    <property name="default_height">250</property>
+    <property name="icon">agua.gif</property>
+    <property name="type_hint">normal</property>
+    <property name="has_separator">False</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox3">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child>
+          <object class="GtkHBox" id="hbox_fun">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkImage" id="image_fun">
+                <property name="visible">True</property>
+                <property name="pixbuf">linux_working.png</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label_fun">
+                <property name="visible">True</property>
+                <property name="xalign">0.05000000074505806</property>
+                <property name="label" translatable="yes">&lt;b&gt;Por favor, espere.
+Gente trabajando.&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
+                <property name="justify">center</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area3">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
         </child>
       </object>
     </child>

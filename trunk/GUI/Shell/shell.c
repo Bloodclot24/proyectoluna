@@ -19,11 +19,11 @@ void correrShell(Shell* shell) {
 		shell->command[length]= 0;
 				
 		if(strcmp(shell->command, salir)) {
-			printf("no salir");
+			//printf("no salir");
 			procesarPalabras(shell->controlador);
 
 		} else {
-			printf("salir");
+			//printf("salir");
 			exit= 1;
 		}
 	}
@@ -43,5 +43,11 @@ void mostrarPalabraShell(Shell* shell, char* palabra) {
 	
 	printf("%s\n", palabra);	
 }	
+
+void mostrarErrorShell(Shell* shell, char* mensaje) {
+
+	printf("ERROR: %s\n", mensaje);		
+}	
+
 
 void destruirShell(Shell* shell) { }

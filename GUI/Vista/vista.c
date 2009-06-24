@@ -30,6 +30,7 @@ void correrVista(Vista* vista) {
    	buttonAccept= GTK_WIDGET(gtk_builder_get_object(vista->builder, "button_accept"));
    	
    	g_signal_connect(G_OBJECT(buttonAccept), "clicked", G_CALLBACK(connect_accept), vista);
+   	g_signal_connect(G_OBJECT(buttonAccept), "enter", G_CALLBACK(connect_accept), vista);
    	
    	gtk_main();
 }

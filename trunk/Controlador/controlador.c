@@ -1,7 +1,7 @@
 #include "controlador.h"
 
 void crearControlador(Controlador* controlador, char* argv) {
-	 
+	
 	char consola[7] = "consola";
 	
 	if(!argv) {
@@ -69,7 +69,7 @@ Datos* procesarPalabras(Controlador* controlador) {
 //  	while(!Lista_EstaVacia(datos->lista)) {
 //     	char* palabra= (char*) Lista_PrimerElemento(datos->lista);
 //    	Lista_RemoverPrimero(datos->lista);
-//     	//printf("Palabra Lista: %s\n", palabra);
+//     	printf("Palabra Lista: %s\n", palabra);
 //     }
 //
 //	printf("Modificar: %d\n", datos->modificar);
@@ -79,9 +79,8 @@ Datos* procesarPalabras(Controlador* controlador) {
 //     	char* palabra= (char*) Lista_PrimerElemento(datos->listaModificar);
 //    	Lista_RemoverPrimero(datos->listaModificar);
 //     	mostrarPalabraVista(controlador->vista, palabra);	 
-//     }
+//    }
 //     
-
 	return(datos);
 }
 

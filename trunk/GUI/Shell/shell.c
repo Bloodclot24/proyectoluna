@@ -8,16 +8,24 @@ void crearShell(Shell* shell, Controlador* controlador) {
 void correrShell(Shell* shell) {
 	
 	int exit= 0;
-	char salir[300] = "salir";
+	int length;
+	char salir[6]= "salir";
 	
 	while(!exit) {
 		printf("%s", PROMPT);
 		fgets(shell->command, 300, stdin);
-		
-		if(strcmp(shell->command, salir) != 0)
+
+		length= strlen(shell->command);
+		shell->command[length]= 0;
+				
+		if(strcmp(shell->command, salir)) {
+			printf("no salir");
 			procesarPalabras(shell->controlador);
-		else
+
+		} else {
+			printf("salir");
 			exit= 1;
+		}
 	}
 }
 

@@ -3,6 +3,26 @@
 
 #define QUERY_ELEM_UNIT 5
 
+int preprocesarRegistro(void* registro){
+     double promedio=0;
+     double cantidadDoc=0;
+     int i;
+     
+//     fprintf(stderr, "Palabra: ");
+//     fwrite(RegGetWord(registro), RegGetWordLength(registro), 1, stderr);
+
+     for(i=0;i<RegGetNumPointers(registro);i++){
+	  
+	  promedio += RegGetPointer(registro,++i);
+	  //  fprintf(stderr, " %i ",RegGetPointer(registro,i));
+	  cantidadDoc++;
+     }
+     promedio /= cantidadDoc;
+     i = promedio;
+//     fprintf(stderr, ", Promedio: %f, Threshold: %i\n", promedio, i);
+     return i;
+}
+
 Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico){
      Matriz *X = (Matriz*)malloc(sizeof(Matriz));
      Tarch *arch1, *arch2, *arch3;
@@ -23,12 +43,14 @@ Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico)
      int comienzo=0;
 
      uint32_t numFilas=0, numColumnas=0;
-     
+
      while(!Feof(archAuxiliar)) {
 	  FreadReg(archAuxiliar, (void**)&linea);
 	  if(linea == NULL)
 	       break;
-	  
+
+	  int threshold = preprocesarRegistro(linea);
+
 	  Fwrite(*lexico, (void*)RegGetWord(linea), RegGetWordLength(linea));
 	  Fwrite(*lexico, &cero, sizeof(cero));
 
@@ -37,19 +59,24 @@ Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico)
 	  offset += RegGetWordLength(linea)+1;
 	  
 	  numFilas++;
-	  int cantidad = RegGetNumPointers(linea); 
+	  int cantidad = RegGetNumPointers(linea);
 	  cantidad /= 2;
 
 	  Fwrite(arch3, &comienzo, sizeof(int));
-	  
+
 	  int i;
+	  uint32_t valor;
 	  int puntero=0;
 	  for(i=0;i<cantidad;i++){
-	       if(numColumnas< RegGetPointer(linea,puntero)) 
-		    numColumnas = RegGetPointer(linea,puntero); 
+	       if(numColumnas< RegGetPointer(linea,puntero))
+		    numColumnas = RegGetPointer(linea,puntero);
 	       comienzo++;
+	       valor = RegGetPointer(linea,puntero+1);
+	       if(valor >= threshold)
+		    valor=1;
+	       else valor = 0;
 	       // por cada registro, escribo 1 si el termino esta en ese documento
-	       Fwrite(arch1, &uno,sizeof(int));
+	       Fwrite(arch1, &valor, sizeof(uint32_t));
 	       // escribo en que posicion debe estar el numero (nº doc)
 	       int posicion = RegGetPointer(linea,puntero);
 	       Fwrite(arch2, &posicion, sizeof(int));

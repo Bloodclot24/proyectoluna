@@ -111,12 +111,6 @@ int armarMatriz(Tarch* archAuxiliar, char* prefijo){
 
      printf("%i,%i",numColumnas+1,numFilas);
 
-/*      X->elementos = arch1; */
-/*      X->columnas = arch2; */
-/*      X->inicioFila = arch3; */
-/*      X->numColumnas = numColumnas+1; */
-/*      X->numFilas = numFilas; */
-
      return 1;
 }
 
@@ -170,6 +164,17 @@ Tarch* cargarPLexico(char* prefijo){
      return arch1;
 }
 
+int compararInt(void* a, void* b){
+     int aa=(int)a;
+     int bb=(int)b;
+     if(aa < bb)
+	  return 1;
+     if(aa > bb)
+	  return -1;
+     return 0;
+}
+
+
 HiperParametros* BSParam(Matriz *X, double dParam){
      double *fila = (double*)malloc(sizeof(double)*X->numColumnas);
      double *alpha, *beta;
@@ -189,7 +194,7 @@ HiperParametros* BSParam(Matriz *X, double dParam){
 	  for(j=0;j<columnas-columnasAnterior;j++){
 	       Fread(X->columnas,&posicion,sizeof(int));
 	       Fread(X->elementos,&valor,sizeof(int));
-	       valor=1;
+	       //valor=1;
 	       fila[posicion] += valor;
 	  }
      }
@@ -222,6 +227,10 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
      int n=q->elementos;
 
      double* c = (double*)malloc(sizeof(double)*X->numColumnas);
+
+     qsort(q->query,q->elementos, sizeof(int),compararInt);
+     qsort(q->agregar,q->cantidadAgregar, sizeof(int),compararInt);
+     qsort(q->sacar,q->cantidadSacar, sizeof(int),compararInt);
 
      memset(c,0,sizeof(double)*X->numColumnas);
 
@@ -259,7 +268,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 	  for(j=0;j<elementosFila;j++){
 	       Fread(X->columnas, &columna, sizeof(int));
 	       Fread(X->elementos, &elem, sizeof(int));
-	       elem=1;
+	       //elem=1;
 	       c[columna] += elem;
 	  }
 	  repetida = 1;	  
@@ -291,7 +300,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 
 	  for(j=0;j<elementosFila;j++){
 	       Fread(X->elementos, &elem, sizeof(int));
-	       elem=1;
+	       //elem=1;
 	       Fread(X->columnas, &columna, sizeof(int));
 	       s[i] += w[columna]*elem;
 	  }
@@ -307,6 +316,11 @@ Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punte
 	  query->query = NULL;
 	  query->query = 0;
 	  query->elementos =0;
+	  query->cantidadAgregar = 0;
+	  query->cantidadSacar = 0;
+	  query->agregar = NULL;
+	  query->sacar = NULL;
+
      }
      
      uint32_t inicio = 0;

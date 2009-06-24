@@ -1,5 +1,6 @@
 #include "archivo.h"
 #include "matrizBayes.h"
+#include "feedBack.h"
 
 int comparar(const void* numero1, const void* numero2){
      const double** n1 = numero1;
@@ -35,6 +36,9 @@ int main(int argc, char** argv){
      for(i=2;i<argc;i++){
 	  q = ArmarQuery(q,argv[i],lexico, punterosLexico);
      }
+
+//     buscarConsulta(q);
+//     guardarConsulta(q);
      
      double* resultado = BSets(X,q,H);
      

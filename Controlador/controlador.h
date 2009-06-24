@@ -3,23 +3,24 @@
  
 #include <malloc.h>
 #include <stdlib.h>
+#include <pthread.h>
 #include "../lista.h"
 #include "../GUI/Vista/vista.h"
 #include "../GUI/Shell/shell.h"
 
-enum Modificar {nada, agregar, eliminar, multiplicar};
-
 typedef struct Datos {
-	enum Modificar modificar;
 	int cantResultados;
+	int cantMultiplicar;
 	Lista* lista;
-	Lista* listaModificar;
+	Lista* listaAgregar;
+	Lista* listaQuitar;
 } Datos;
 
 typedef struct Controlador {
      int console;
      Vista* vista;
      Shell* shell;
+     int error;
 } Controlador;
 
 /* Crea un controlador */
@@ -42,8 +43,9 @@ void correr(Controlador* controlador);
  * - cantResultados: cantidad de resultados a devolver
  * - lista: lista de las palabras insertadas.
  * - listaModificar: lista de las palabras agregar o eliminar en la busqueda.
+ * En caso de error, devuelve NULL.
  */
-Datos* procesarPalabras(Controlador* controlador);
+void procesarPalabras(Controlador* controlador);
 
 /* Muestra el set de palabras resultado */
 void mostrarPalabraResultados(Controlador* controlador, Lista* lista);

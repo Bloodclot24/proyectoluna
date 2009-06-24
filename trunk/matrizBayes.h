@@ -5,6 +5,13 @@
 #include <stdint.h>
 #include <math.h>
 
+#define MATRIZ1 "_matriz1"
+#define MATRIZ2 "_matriz2"
+#define MATRIZ3 "_matriz3"
+#define LEXICO  "_lexico"
+#define PLEXICO "_punterosLexico"
+#define HIPERPARAM "_hiperParam"
+
 
 typedef struct {
      Tarch *elementos, *columnas, *inicioFila;
@@ -23,7 +30,7 @@ typedef struct{
 }Query;
 
 /* Arma una matriz segun el archivo auxiliar */
-Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico);
+int armarMatriz(Tarch* archAuxiliar, char* prefijo);
 
 /* Calcula hiperparametros dada la matriz X y un parametro de
  * concentracion de Dirichlet (generalmente dParam=2) */

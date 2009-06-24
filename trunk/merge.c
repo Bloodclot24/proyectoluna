@@ -47,7 +47,6 @@ void* mergePunteros(uint32_t* pointers, uint32_t *numPointers, void* reg){
 	  }
      }
 
-
      return pointers;
 }
  

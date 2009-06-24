@@ -8,37 +8,51 @@ int preprocesarRegistro(void* registro){
      double cantidadDoc=0;
      int i;
      
-//     fprintf(stderr, "Palabra: ");
-//     fwrite(RegGetWord(registro), RegGetWordLength(registro), 1, stderr);
-
      for(i=0;i<RegGetNumPointers(registro);i++){
-	  
 	  promedio += RegGetPointer(registro,++i);
-	  //  fprintf(stderr, " %i ",RegGetPointer(registro,i));
 	  cantidadDoc++;
      }
+
      promedio /= cantidadDoc;
-     i = promedio;
-//     fprintf(stderr, ", Promedio: %f, Threshold: %i\n", promedio, i);
-     return i;
+     return promedio;
 }
 
-Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico){
-     Matriz *X = (Matriz*)malloc(sizeof(Matriz));
-     Tarch *arch1, *arch2, *arch3;
-     
+char* strcat2(char* a, char* b){
+     char* resultado = malloc(strlen(a)+strlen(b)+1);
+     resultado[0] = 0;
+     strcat(resultado, a);
+     strcat(resultado, b);
+     return resultado;     
+}
+
+int armarMatriz(Tarch* archAuxiliar, char* prefijo){
+     Tarch *arch1, *arch2, *arch3, *lexico, *punterosLexico;
+
      int* linea;
+
+     char* nombre = strcat2(prefijo,MATRIZ1);
+     arch1 = Fopen(nombre,"w");
+     free(nombre);
+
+     nombre = strcat2(prefijo,MATRIZ2);
+     arch2 = Fopen(nombre,"w");
+     free(nombre);
+
+     nombre = strcat2(prefijo,MATRIZ3);
+     arch3 = Fopen(nombre,"w");
+     free(nombre);
      
-     arch1 = Fopen("matriz1","w");
-     arch2 = Fopen("matriz2","w");
-     arch3 = Fopen("matriz3","w");
-     *lexico = Fopen("Lexico", "w");
-     *punterosLexico = Fopen("PunterosLexico", "w");
-     
-     uint64_t offset=0;
+     nombre = strcat2(prefijo,LEXICO);
+     lexico = Fopen(nombre,"w");
+     free(nombre);
+
+     nombre = strcat2(prefijo,PLEXICO);
+     punterosLexico = Fopen(nombre,"w");
+     free(nombre);
+
+     uint32_t offset=0;
      char cero=0;
-     
-     
+
      int uno=1;
      int comienzo=0;
 
@@ -51,13 +65,13 @@ Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico)
 
 	  int threshold = preprocesarRegistro(linea);
 
-	  Fwrite(*lexico, (void*)RegGetWord(linea), RegGetWordLength(linea));
-	  Fwrite(*lexico, &cero, sizeof(cero));
+	  Fwrite(lexico, (void*)RegGetWord(linea), RegGetWordLength(linea));
+	  Fwrite(lexico, &cero, sizeof(cero));
 
-	  Fwrite(*punterosLexico, &offset, sizeof(offset));
-	  
+	  Fwrite(punterosLexico, &offset, sizeof(offset));
+
 	  offset += RegGetWordLength(linea)+1;
-	  
+
 	  numFilas++;
 	  int cantidad = RegGetNumPointers(linea);
 	  cantidad /= 2;
@@ -72,32 +86,88 @@ Matriz* armarMatriz(Tarch* archAuxiliar, Tarch** lexico, Tarch** punterosLexico)
 		    numColumnas = RegGetPointer(linea,puntero);
 	       comienzo++;
 	       valor = RegGetPointer(linea,puntero+1);
-	       if(valor >= threshold)
+	       if(valor >= threshold){
 		    valor=1;
+	       }
 	       else valor = 0;
+
 	       // por cada registro, escribo 1 si el termino esta en ese documento
 	       Fwrite(arch1, &valor, sizeof(uint32_t));
 	       // escribo en que posicion debe estar el numero (nº doc)
 	       int posicion = RegGetPointer(linea,puntero);
 	       Fwrite(arch2, &posicion, sizeof(int));
+
 	       puntero += 2;
 	  }
+	  free(linea);
      }
      Fwrite(arch3, &comienzo, sizeof(int));
 
-     Frewind(arch1);
-     Frewind(arch2);
-     Frewind(arch3);
-     Frewind(*lexico);
-     Frewind(*punterosLexico);
+     Fclose(arch1);
+     Fclose(arch2);
+     Fclose(arch3);
+     Fclose(lexico);
+     Fclose(punterosLexico);
 
-     X->elementos = arch1;
-     X->columnas = arch2;
-     X->inicioFila = arch3;
-     X->numColumnas = numColumnas+1;
-     X->numFilas = numFilas;
+     printf("%i,%i",numColumnas+1,numFilas);
+
+/*      X->elementos = arch1; */
+/*      X->columnas = arch2; */
+/*      X->inicioFila = arch3; */
+/*      X->numColumnas = numColumnas+1; */
+/*      X->numFilas = numFilas; */
+
+     return 1;
+}
+
+Matriz* cargarMatriz(char* prefijo){
+     Matriz *X = (Matriz*)malloc(sizeof(Matriz));
+     char* nombre = strcat2(prefijo,MATRIZ1);
+     X->elementos = Fopen(nombre,"r");
+     free(nombre);
+
+     nombre = strcat2(prefijo,MATRIZ2);
+     X->columnas = Fopen(nombre,"r");
+     free(nombre);
+
+     nombre = strcat2(prefijo,MATRIZ3);
+     X->inicioFila = Fopen(nombre,"r");
+     free(nombre);
 
      return X;
+}
+
+HiperParametros* cargarHParam(Matriz* X, char* prefijo){
+     HiperParametros *H = (HiperParametros*)malloc(sizeof(HiperParametros));
+     char* nombre = strcat2(prefijo,HIPERPARAM);
+     Tarch *arch1 = Fopen(nombre,"r");
+     free(nombre);
+
+     H->alpha = malloc(X->numColumnas*sizeof(double));
+     H->beta = malloc(X->numColumnas*sizeof(double));
+
+     int i;
+     for(i=0;!Feof(arch1);i++){
+	  Fread(arch1, (H->alpha+i), sizeof(double));
+	  Fread(arch1, (H->beta+i), sizeof(double));
+     }
+     
+     Fclose(arch1);
+     return H;
+}
+
+Tarch* cargarLexico(char* prefijo){
+     char* nombre = strcat2(prefijo,LEXICO);
+     Tarch *arch1 = Fopen(nombre,"r");
+     free(nombre);
+     return arch1;
+}
+
+Tarch* cargarPLexico(char* prefijo){
+     char* nombre = strcat2(prefijo,PLEXICO);
+     Tarch *arch1 = Fopen(nombre,"r");
+     free(nombre);
+     return arch1;
 }
 
 HiperParametros* BSParam(Matriz *X, double dParam){
@@ -109,7 +179,6 @@ HiperParametros* BSParam(Matriz *X, double dParam){
 
      memset(fila,0,sizeof(double)*X->numColumnas);
 
-
      /*   m = full(sum(X,2))  */
 
      Fread(X->inicioFila, &columnas, sizeof(int));
@@ -120,6 +189,7 @@ HiperParametros* BSParam(Matriz *X, double dParam){
 	  for(j=0;j<columnas-columnasAnterior;j++){
 	       Fread(X->columnas,&posicion,sizeof(int));
 	       Fread(X->elementos,&valor,sizeof(int));
+	       valor=1;
 	       fila[posicion] += valor;
 	  }
      }
@@ -189,6 +259,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 	  for(j=0;j<elementosFila;j++){
 	       Fread(X->columnas, &columna, sizeof(int));
 	       Fread(X->elementos, &elem, sizeof(int));
+	       elem=1;
 	       c[columna] += elem;
 	  }
 	  repetida = 1;	  
@@ -220,6 +291,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 
 	  for(j=0;j<elementosFila;j++){
 	       Fread(X->elementos, &elem, sizeof(int));
+	       elem=1;
 	       Fread(X->columnas, &columna, sizeof(int));
 	       s[i] += w[columna]*elem;
 	  }
@@ -234,20 +306,21 @@ Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punte
 	  query = (Query*)malloc(sizeof(Query));
 	  query->query = NULL;
 	  query->query = 0;
+	  query->elementos =0;
      }
      
-     uint64_t inicio = 0;
-     uint64_t fin = Fsize(punterosLexico)/sizeof(uint64_t);
-     uint64_t posicionLexico=0;
+     uint32_t inicio = 0;
+     uint32_t fin = Fsize(punterosLexico)/sizeof(uint32_t);
+     uint32_t posicionLexico=0;
      char* palabra;
      
-     uint64_t medio;
+     uint32_t medio;
 
      int encontrado = 0;
 
      while(inicio <= fin && !encontrado){
 	  medio = (inicio+fin)/2;
-	  Fseek(punterosLexico, medio*sizeof(uint64_t), SEEK_SET);
+	  Fseek(punterosLexico, medio*sizeof(uint32_t), SEEK_SET);
 	  Fread(punterosLexico, &posicionLexico, sizeof(posicionLexico));
 	  Fseek(lexico, posicionLexico, SEEK_SET);
 	  palabra = (char*)FreadString(lexico);
@@ -263,6 +336,7 @@ Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punte
 	  else{
 	       encontrado = 1;
 	  }
+	  free(palabra);
      }
 
      if(encontrado){

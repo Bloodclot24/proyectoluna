@@ -14,19 +14,19 @@ int preprocesarRegistro(void* registro){
      }
 
      promedio /= cantidadDoc;
-     return (int) (promedio*1);
+     return (int) (promedio);
 }
 
-char* strcat2(char* a, char* b){
+static char* strcat2(char* a, char* b){
      char* resultado = malloc(strlen(a)+strlen(b)+1);
      resultado[0] = 0;
      strcat(resultado, a);
      strcat(resultado, b);
-     return resultado;     
+     return resultado;
 }
 
 int armarMatriz(Tarch* archAuxiliar, char* prefijo){
-     Tarch *arch1, *arch2, *arch3, *lexico, *punterosLexico;
+     Tarch *arch1, *arch2, *arch3, *arch4, *lexico, *punterosLexico;
 
      int* linea;
 
@@ -41,6 +41,10 @@ int armarMatriz(Tarch* archAuxiliar, char* prefijo){
      nombre = strcat2(prefijo,MATRIZ3);
      arch3 = Fopen(nombre,"w");
      free(nombre);
+
+     nombre = strcat2(prefijo,MATRIZ3);
+     arch4 = Fopen(nombre,"w");
+     free(nombre);
      
      nombre = strcat2(prefijo,LEXICO);
      lexico = Fopen(nombre,"w");
@@ -49,6 +53,14 @@ int armarMatriz(Tarch* archAuxiliar, char* prefijo){
      nombre = strcat2(prefijo,PLEXICO);
      punterosLexico = Fopen(nombre,"w");
      free(nombre);
+
+     if(arch1 == NULL || arch2 == NULL || arch3 == NULL || arch4 == NULL || lexico == NULL || punterosLexico == NULL){
+	  Fclose(arch1); Fclose(arch2); 
+	  Fclose(arch3); Fclose(arch4);
+	  Fclose(lexico);
+	  Fclose(punterosLexico);
+	  return -1;
+     }
 
      uint32_t offset=0;
      char cero=0;
@@ -60,46 +72,45 @@ int armarMatriz(Tarch* archAuxiliar, char* prefijo){
 
      while(!Feof(archAuxiliar)) {
 	  FreadReg(archAuxiliar, (void**)&linea);
-	  if(linea == NULL)
-	       break;
+	  if(linea != NULL){
+	       int threshold = preprocesarRegistro(linea);
 
-	  int threshold = preprocesarRegistro(linea);
+	       Fwrite(lexico, (void*)RegGetWord(linea), RegGetWordLength(linea));
+	       Fwrite(lexico, &cero, sizeof(cero));
 
-	  Fwrite(lexico, (void*)RegGetWord(linea), RegGetWordLength(linea));
-	  Fwrite(lexico, &cero, sizeof(cero));
+	       Fwrite(punterosLexico, &offset, sizeof(offset));
 
-	  Fwrite(punterosLexico, &offset, sizeof(offset));
+	       offset += RegGetWordLength(linea)+1;
 
-	  offset += RegGetWordLength(linea)+1;
+	       numFilas++;
+	       int cantidad = RegGetNumPointers(linea);
+	       cantidad /= 2;
 
-	  numFilas++;
-	  int cantidad = RegGetNumPointers(linea);
-	  cantidad /= 2;
+	       Fwrite(arch3, &comienzo, sizeof(int));
+	       
+	       int i;
+	       uint32_t valor;
+	       int puntero=0;
+	       for(i=0;i<cantidad;i++){
+		    if(numColumnas< RegGetPointer(linea,puntero))
+			 numColumnas = RegGetPointer(linea,puntero);
+		    comienzo++;
+		    valor = RegGetPointer(linea,puntero+1);
+		    if(valor >= threshold){
+			 valor=1;
+		    }
+		    else valor = 0;
 
-	  Fwrite(arch3, &comienzo, sizeof(int));
-
-	  int i;
-	  uint32_t valor;
-	  int puntero=0;
-	  for(i=0;i<cantidad;i++){
-	       if(numColumnas< RegGetPointer(linea,puntero))
-		    numColumnas = RegGetPointer(linea,puntero);
-	       comienzo++;
-	       valor = RegGetPointer(linea,puntero+1);
-	       if(valor >= threshold){
-		    valor=1;
+		    // por cada registro, escribo 1 si el termino esta en ese documento
+		    Fwrite(arch1, &valor, sizeof(uint32_t));
+		    // escribo en que posicion debe estar el numero (nº doc)
+		    int posicion = RegGetPointer(linea,puntero);
+		    Fwrite(arch2, &posicion, sizeof(int));
+		    
+		    puntero += 2;
 	       }
-	       else valor = 0;
-
-	       // por cada registro, escribo 1 si el termino esta en ese documento
-	       Fwrite(arch1, &valor, sizeof(uint32_t));
-	       // escribo en que posicion debe estar el numero (nº doc)
-	       int posicion = RegGetPointer(linea,puntero);
-	       Fwrite(arch2, &posicion, sizeof(int));
-
-	       puntero += 2;
+	       free(linea);
 	  }
-	  free(linea);
      }
      Fwrite(arch3, &comienzo, sizeof(int));
 
@@ -109,13 +120,15 @@ int armarMatriz(Tarch* archAuxiliar, char* prefijo){
      Fclose(lexico);
      Fclose(punterosLexico);
 
-     printf("%i,%i",numColumnas+1,numFilas);
-
      return 1;
 }
 
 Matriz* cargarMatriz(char* prefijo){
      Matriz *X = (Matriz*)malloc(sizeof(Matriz));
+
+     if(X== NULL)
+	  return X;
+
      char* nombre = strcat2(prefijo,MATRIZ1);
      X->elementos = Fopen(nombre,"r");
      free(nombre);
@@ -135,9 +148,10 @@ Matriz* cargarMatriz(char* prefijo){
 	  free(X);
 	  X=NULL;
      }
-     X->numFilas = 4224832; 
-     X->numColumnas = 323415; 
-
+     else{
+	  X->numFilas = 4224832; 
+	  X->numColumnas = 323415; 
+     }
      return X;
 }
 
@@ -190,7 +204,7 @@ HiperParametros* BSParam(Matriz *X, double dParam){
      double *alpha, *beta;
      int i,j;
      int columnas, columnasAnterior;
-     int posicion, valor;
+     int posicion, valor=1;
 
      memset(fila,0,sizeof(double)*X->numColumnas);
 
@@ -204,7 +218,6 @@ HiperParametros* BSParam(Matriz *X, double dParam){
 	  for(j=0;j<columnas-columnasAnterior;j++){
 	       Fread(X->columnas,&posicion,sizeof(int));
 	       Fread(X->elementos,&valor,sizeof(int));
-	       //valor=1;
 	       fila[posicion] += valor;
 	  }
      }
@@ -254,7 +267,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
      int elementosFila=0;
      int repetida =0;
      int columna=0;
-     int elem;
+     int elem=1;
 
      /* c = sum(X(:,q),2); */
 
@@ -282,7 +295,6 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 	  for(j=0;j<elementosFila;j++){
 	       Fread(X->columnas, &columna, sizeof(int));
 	       Fread(X->elementos, &elem, sizeof(int));
-//	       elem=1;
 	       c[columna] += elem;
 	  }
 	  repetida = 1;	  
@@ -314,7 +326,6 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 
 	  for(j=0;j<elementosFila;j++){
 	       Fread(X->elementos, &elem, sizeof(int));
-//	       elem=1;
 	       Fread(X->columnas, &columna, sizeof(int));
 	       s[i] += w[columna]*elem;
 	  }

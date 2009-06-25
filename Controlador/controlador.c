@@ -190,7 +190,7 @@ void procesarPalabras(Controlador* controlador) {
 	  printf("busco\n");
 	  salida = agua(controlador->agua, datos);
 	  printf("\nlisto");
-				
+
 	  if(salida) {
 	       while(!Lista_EstaVacia(datos->lista)){
 		    char * palabra = Lista_RemoverPrimero(datos->lista);
@@ -202,7 +202,7 @@ void procesarPalabras(Controlador* controlador) {
 
 		    printf("%s\n", palabra);
 		
-		    free(palabra);
+		    //free(palabra);
 	       }
 	  } else
 	       mostrarNoEncontrado(controlador->vista);

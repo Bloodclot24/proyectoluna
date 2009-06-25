@@ -413,8 +413,8 @@ void DestruirQuery(Query* q){
      if(q != NULL){
 	  if(q->elementos != 0 && q->query != NULL){
 	       q->elementos = 0;
-	       free(q);
-	       q=NULL;
+	       free(q->query);
+	       q->query=NULL;
 	  }
 	  if(q->cantidadSacar != 0 && q->sacar != NULL){
 	       q->cantidadSacar = 0;
@@ -426,6 +426,8 @@ void DestruirQuery(Query* q){
 	       free(q->agregar);
 	       q->agregar = NULL;
 	  }
+	  free(q);
+	  q=NULL;
 
      }
 }

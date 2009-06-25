@@ -14,4 +14,6 @@ int comparar(const void* numero1, const void* numero2);
 
 Agua* comenzar_agua(char* prefijo);
 
+int agua(Agua* agua, Datos* datos);
+
 #endif 

@@ -199,7 +199,7 @@ void procesarPalabras(Controlador* controlador) {
 	if(!controlador->error) {
 		pthread_create(&threads, NULL, distraccion, (void*)controlador);
 	
-		//salida = agua(controlador->agua, datos);
+		salida = agua(controlador->agua, datos);
 		
 		controlador->procesando= 0;
 		pthread_join(threads, NULL);
@@ -210,9 +210,10 @@ void procesarPalabras(Controlador* controlador) {
 			     
 			     if(controlador->console) 
 			     	mostrarPalabraShell(controlador->shell, palabra);	
-			     //printf("%s\n", palabra);
 			     else
 			     	mostrarPalabraVista(controlador->vista, palabra);	
+
+			     printf("%s\n", palabra);
 		
 			     //free(palabra);
 			}

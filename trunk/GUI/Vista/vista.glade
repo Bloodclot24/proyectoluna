@@ -13,7 +13,7 @@
     <property name="window_position">center-always</property>
     <property name="default_width">750</property>
     <property name="default_height">750</property>
-    <property name="icon">agua.gif</property>
+    <property name="icon">agua.png</property>
     <child>
       <object class="GtkTable" id="table_general">
         <property name="visible">True</property>
@@ -220,7 +220,7 @@
                     <property name="xalign">0.05000000074505806</property>
                     <property name="xpad">8</property>
                     <property name="ypad">8</property>
-                    <property name="pixbuf">agua.gif</property>
+                    <property name="pixbuf">agua.png</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -390,7 +390,7 @@
     <property name="window_position">center-always</property>
     <property name="default_width">250</property>
     <property name="default_height">250</property>
-    <property name="icon">agua.gif</property>
+    <property name="icon">agua.png</property>
     <property name="type_hint">normal</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
@@ -455,7 +455,7 @@ Gente trabajando&lt;/b&gt;</property>
     <property name="window_position">center-always</property>
     <property name="default_width">250</property>
     <property name="default_height">250</property>
-    <property name="icon">agua.gif</property>
+    <property name="icon">agua.png</property>
     <property name="type_hint">normal</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">

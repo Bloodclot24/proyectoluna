@@ -67,5 +67,5 @@ int agua(Agua* agua, Datos* datos){
 
      free(ordenado);
      free(q);
-
+     return 1;
 }

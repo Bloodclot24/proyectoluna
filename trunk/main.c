@@ -6,11 +6,15 @@ int main(int argc, char **argv) {
    	
 	Controlador* controlador= (Controlador*) malloc(sizeof(Controlador));
 	
-	/* Si el argumento es "consola", la aplicacion se corre por consola,
-	 * cualquier otro caso se correra por la interfaz */
-	crearControlador(controlador, argv[1]);
-	correr(controlador);
-	
+	/* Si el PRIMER argumento es "-vista", la aplicacion se corre
+	 * por gtk, si no hay argumentos se corre un shell. En otro
+	 * caso se corre en modo batch*/
+	crearControlador(controlador, argc, argv);
+
+	if(!controlador->batch){
+
+	     correr(controlador);
+	}
 	destruirControlador(controlador);
 	free(controlador);
 

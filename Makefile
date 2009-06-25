@@ -15,7 +15,7 @@ target_ppal = agua
 target_procesador = agua_procesador
 
 ifndef PREFIX
-PREFIX=/usr/local
+PREFIX=~/agua/
 endif
 
 # Si usa funciones de math.h, descomentá (quitale el '#' a) la siguiente línea.
@@ -130,22 +130,22 @@ principal: $(fuentes_ppal)
 	$(LD) $(LDFLAGS) $(CFLAGS) $(fuentes_ppal) $(LOADLIBS) $(LDLIBS) -o $(target_ppal)
 
 install: $(all)
-	mkdir -p $(PREFIX)/bin/
-	mkdir -p $(PREFIX)/bin/GUI/Vista/
-	cp GUI/Vista/*.glade $(PREFIX)/bin/GUI/Vista/
-	cp GUI/Vista/*.png $(PREFIX)/bin/GUI/Vista/
-	cp GUI/Vista/*.gif $(PREFIX)/bin/GUI/Vista/
-	cp $(target_procesador) $(PREFIX)/bin/
-	cp $(target_ppal) $(PREFIX)/bin/
+	mkdir -p $(PREFIX)
+	mkdir -p $(PREFIX)/GUI/Vista/
+	cp GUI/Vista/*.glade $(PREFIX)/GUI/Vista/
+	cp GUI/Vista/*.png $(PREFIX)/GUI/Vista/
+	cp GUI/Vista/*.gif $(PREFIX)/GUI/Vista/
+	cp $(target_procesador) $(PREFIX)/
+	cp $(target_ppal) $(PREFIX)/
 
 uninstall:
-	@if [ -r $(PREFIX)/bin/$(target_ppal) ]; \
+	@if [ -r $(PREFIX)/$(target_ppal) ]; \
 	then \
-		rm $(PREFIX)/bin/$(target_ppal); \
+		rm $(PREFIX)/$(target_ppal); \
 	fi
-	@if [ -r $(PREFIX)/bin/$(target_procesador) ]; \
+	@if [ -r $(PREFIX)/$(target_procesador) ]; \
 	then \
-		rm $(PREFIX)/bin/$(target_procesador); \
+		rm $(PREFIX)/$(target_procesador); \
 	fi
 
 

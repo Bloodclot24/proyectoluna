@@ -203,7 +203,7 @@ void procesarPalabras(Controlador* controlador) {
 	if(!controlador->console)
 		limpiarEntrys(controlador->vista);
 	
-	if(!controlador->error) {
+	if(!controlador->error && controlador->agua != NULL) {
 		pthread_create(&threads, NULL, distraccion, (void*)controlador);
 	
 		salida = agua(controlador->agua, datos);

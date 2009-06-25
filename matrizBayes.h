@@ -9,6 +9,7 @@
 #define MATRIZ1 "_matriz1"
 #define MATRIZ2 "_matriz2"
 #define MATRIZ3 "_matriz3"
+#define MATRIZ4 "_matriz4"
 #define LEXICO  "_lexico"
 #define PLEXICO "_punterosLexico"
 #define HIPERPARAM "_hiperParam"

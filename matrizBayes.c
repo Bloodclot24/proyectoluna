@@ -1,6 +1,7 @@
 #include "matrizBayes.h"
 #include "archivo.h"
 
+
 #define QUERY_ELEM_UNIT 5
 
 int preprocesarRegistro(void* registro){
@@ -348,34 +349,18 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
      return s;
 }
 
-Query* ArmarQuery(Query* query, char* termino, Tarch* lexico, Tarch* punterosLexico){
-
-     Frewind(lexico);
-     Frewind(punterosLexico);
-     
-     if(query == NULL){
-	  query = (Query*)malloc(sizeof(Query));
-	  query->query = NULL;
-	  query->query = 0;
-	  query->elementos =0;
-	  query->cantidadAgregar = 0;
-	  query->cantidadSacar = 0;
-	  query->agregar = NULL;
-	  query->sacar = NULL;
-
-     }
-     
+int buscarTermino(char* termino, Tarch* lexico, Tarch* punterosLexico){
      uint32_t inicio = 0;
      uint32_t fin = Fsize(punterosLexico)/sizeof(uint32_t);
      uint32_t posicionLexico=0;
      char* palabra;
-
+     
      int i;
      for(i=0;termino[i]!= 0;i++)
 	  termino[i] = tolower(termino[i]);
      
      uint32_t medio;
-
+     
      int encontrado = 0;
 
      while(inicio <= fin && !encontrado){
@@ -398,12 +383,43 @@ Query* ArmarQuery(Query* query, char* termino, Tarch* lexico, Tarch* punterosLex
 	  }
 	  free(palabra);
      }
+     if(encontrado)
+	  return medio;
+     return -1;
+}
 
-     if(encontrado){
-	  if(query->elementos%QUERY_ELEM_UNIT == 0){
-	       query->query = realloc(query->query, (query->elementos+QUERY_ELEM_UNIT)*sizeof(int));
-	  }
-	  query->query[(query->elementos)++] = medio;
+Query* ArmarQuery(Datos* datos, Tarch* lexico, Tarch* punterosLexico){
+     
+     Frewind(lexico);
+     Frewind(punterosLexico);
+     
+     Query *query = (Query*)malloc(sizeof(Query));
+
+     query->elementos = Lista_CantidadElem(datos->lista);
+     query->cantidadAgregar = Lista_CantidadElem(datos->listaAgregar);     
+     query->cantidadSacar = Lista_CantidadElem(datos->listaQuitar);
+     
+     query->query = malloc(query->elementos*sizeof(int));
+     query->agregar = malloc(query->cantidadAgregar*sizeof(int));
+     query->sacar = malloc(query->cantidadSacar*sizeof(int));
+
+     int i=0;
+     while(!Lista_EstaVacia(datos->lista)){
+	  int t=0;
+	  if((t = buscarTermino(Lista_RemoverPrimero(datos->lista),lexico, punterosLexico)) != -1)
+	       query->query[i++] = t;
+     }
+     i=0;
+     while(!Lista_EstaVacia(datos->listaAgregar)){
+	  int t=0;
+	  if((t = buscarTermino(Lista_RemoverPrimero(datos->listaAgregar),lexico, punterosLexico)) != -1)
+	       query->agregar[i++] = t;
+     }
+     i=0;
+     while(!Lista_EstaVacia(datos->listaQuitar)){
+	  int t=0;
+	  if((t = buscarTermino(Lista_RemoverPrimero(datos->listaQuitar),lexico, punterosLexico)) != -1)
+	       query->sacar[i++] = t;
      }
 
      return query;

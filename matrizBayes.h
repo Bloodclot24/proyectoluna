@@ -37,6 +37,8 @@ typedef struct{
      int cantidadSacar;
 }Query;
 
+#include "Controlador/controlador.h"
+
 /* Arma una matriz segun el archivo auxiliar */
 int armarMatriz(Tarch* archAuxiliar, char* prefijo);
 
@@ -62,7 +64,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param);
 
 /* Arma un Query agregando el termino especificado. Si query es NULL,
  * devuelve un nuevo Query, si no, agrega un nuevo termino. */
-Query* ArmarQuery(Query* query, char* termino, Tarch* lexico, Tarch* punterosLexico);
+Query* ArmarQuery(Datos* datos, Tarch* lexico, Tarch* punterosLexico);
 
 /* Libera la memoria utilizada por el query */
 void DestruirQuery(Query* q);

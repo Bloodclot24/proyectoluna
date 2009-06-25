@@ -14,7 +14,7 @@ int preprocesarRegistro(void* registro){
      }
 
      promedio /= cantidadDoc;
-     return promedio;
+     return (int) (promedio*1);
 }
 
 char* strcat2(char* a, char* b){
@@ -272,7 +272,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 	  for(j=0;j<elementosFila;j++){
 	       Fread(X->columnas, &columna, sizeof(int));
 	       Fread(X->elementos, &elem, sizeof(int));
-	       elem=1;
+//	       elem=1;
 	       c[columna] += elem;
 	  }
 	  repetida = 1;	  
@@ -304,7 +304,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 
 	  for(j=0;j<elementosFila;j++){
 	       Fread(X->elementos, &elem, sizeof(int));
-	       elem=1;
+//	       elem=1;
 	       Fread(X->columnas, &columna, sizeof(int));
 	       s[i] += w[columna]*elem;
 	  }

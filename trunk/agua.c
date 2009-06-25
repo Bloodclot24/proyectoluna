@@ -46,11 +46,10 @@ int agua(Agua* agua, Datos* datos){
      while(!Lista_EstaVacia(datos->lista)){
 	  char* termino= Lista_RemoverPrimero(datos->lista);
 	  q = ArmarQuery(q,termino,agua->lexico, agua->punterosLexico);
-//	  free(termino);
      }
 
-//     buscarConsulta(q);
-//     guardarConsulta(q);
+     buscarConsulta(q);
+     guardarConsulta(q);
      
      double* resultado = BSets(agua->X,q,agua->H);
      double** ordenado = malloc(agua->X->numFilas*sizeof(double*));
@@ -68,7 +67,6 @@ int agua(Agua* agua, Datos* datos){
 	  Fseek(agua->lexico, offset, SEEK_SET);
 	  char* termino;
 	  termino = FreadString(agua->lexico);
-	  printf("---->%s\n",termino);
 	  Lista_Insertar(datos->lista, termino);
      }
 

@@ -30,7 +30,7 @@ typedef struct Controlador {
      Vista* vista;
      Shell* shell;
      int error;
-     Agua* agua;
+     struct Agua* agua;
      int procesando;
      char* batch;
      pthread_mutex_t mutex;

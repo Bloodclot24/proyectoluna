@@ -69,9 +69,7 @@ int buscarConsulta(Query* query){
 				if(cantidadAltas != 0){
 					while( i <= cantidadAltas){
 						Fread(archivo,&terminoAgregar,sizeof(int));
-						if(query->cantidadAgregar%QUERY_ELEM_UNIT == 0){
-						     query->agregar = realloc(query->agregar, (query->cantidadAgregar+QUERY_ELEM_UNIT)*sizeof(int));
-						}
+						query->agregar = realloc(query->agregar, ((query->cantidadAgregar)+1)*sizeof(int));
 						query->agregar[(query->cantidadAgregar)++] = terminoAgregar;
 						i++;
 					}
@@ -80,12 +78,10 @@ int buscarConsulta(Query* query){
 				if(cantidadBajas != 0){	
 					i = 0;
 					while( i <= cantidadBajas){
-						Fread(archivo,&terminoSacar,sizeof(int));
-						if(query->cantidadSacar%QUERY_ELEM_UNIT == 0){
-						     query->sacar = realloc(query->sacar, (query->cantidadSacar+QUERY_ELEM_UNIT)*sizeof(int));
-						}
-						query->sacar[(query->cantidadSacar)++] = terminoSacar;
-						i++;
+					     Fread(archivo,&terminoSacar,sizeof(int));
+					     query->sacar = realloc(query->sacar, (query->cantidadSacar+1)*sizeof(int));
+					     query->sacar[(query->cantidadSacar)++] = terminoSacar;
+					     i++;
 					}
 				}
 			}else Fseek(archivo,sizeof(int)*(cantidadTerminos - i) ,SEEK_CUR);	 

@@ -43,14 +43,9 @@ Agua* comenzar_agua(char* prefijo){
 int agua(Agua* agua, Datos* datos){
      Query* q=NULL;
      int i;
-     while(!Lista_EstaVacia(datos->lista)){
-	  char* termino= Lista_RemoverPrimero(datos->lista);
-	  q = ArmarQuery(q,termino,agua->lexico, agua->punterosLexico);
-     }
-
-     buscarConsulta(q);
-     guardarConsulta(q);
      
+     q = ArmarQuery(datos,agua->lexico, agua->punterosLexico);
+         
      double* resultado = BSets(agua->X,q,agua->H);
      double** ordenado = malloc(agua->X->numFilas*sizeof(double*));
 
@@ -60,14 +55,36 @@ int agua(Agua* agua, Datos* datos){
      
      qsort(ordenado, agua->X->numFilas, sizeof(double*), comparar);
 
+     buscarConsulta(q);
+     guardarConsulta(q);
+
+     int k=0,j=0;
+     int f,w;
+     int encontrado;
      for(i=0;i<datos->cantResultados*datos->cantMultiplicar;i++){
-	  Fseek(agua->punterosLexico, (int)(ordenado[i]-resultado)*sizeof(uint32_t), SEEK_SET);
-	  uint32_t offset;
-	  Fread(agua->punterosLexico, &offset, sizeof(uint32_t));
-	  Fseek(agua->lexico, offset, SEEK_SET);
-	  char* termino;
-	  termino = FreadString(agua->lexico);
-	  Lista_Insertar(datos->lista, termino);
+	  if((q->cantidadAgregar) > 0){
+	       f=q->agregar[k++];
+	       q->cantidadAgregar--;
+	  }
+	  else
+	       f=(int)(ordenado[j++]-resultado);
+
+	  for(w=0,encontrado=0;w<q->cantidadSacar && !encontrado;w++){
+	       if(q->sacar[w] == f){
+		    encontrado = 1;
+	       }
+	  }
+	  if(!encontrado){
+	       Fseek(agua->punterosLexico, f*sizeof(uint32_t), SEEK_SET);
+	       uint32_t offset;
+	       Fread(agua->punterosLexico, &offset, sizeof(uint32_t));
+	       Fseek(agua->lexico, offset, SEEK_SET);
+	       char* termino;
+	       termino = FreadString(agua->lexico);
+	       Lista_Insertar(datos->lista, termino);
+	  }
+	  else
+	       i--;
      }
 
      free(ordenado);

@@ -27,7 +27,7 @@ los archivos resultantes.\n");
      X->numColumnas = 323415;
 
      printf("Calculando los hiperparametros ...\n");
-     HiperParametros *H = BSParam(X,2);
+     HiperParametros *H = BSParam(X,1);
 
      char *nombre = malloc(strlen(argv[2])+strlen(HIPERPARAM)+1);
      nombre[0]=0;

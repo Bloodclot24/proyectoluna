@@ -148,8 +148,10 @@ void Funlink(Tarch* archivo){
        }
        if(archivo->nombre != NULL)
 	    free(archivo->nombre);
-       free(archivo);
 
+       archivo->fd=NULL;
+
+       free(archivo);
   }
 }
 

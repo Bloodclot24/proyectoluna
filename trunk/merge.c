@@ -67,7 +67,7 @@ int compararTerminos(const void* cadena1, const void* cadena2, const void* param
 }
 
 Tarch* mergeLexico(Tparticiones *Gparticion, int cantidad){
-     if(cantidad <= 1) cantidad = 2; /* No se puede hacer un merge con una sola particion */
+//     if(cantidad <= 1) cantidad = 2; /* No se puede hacer un merge con una sola particion */
 
      char* nuevoNombre;
      nuevoNombre = malloc(strlen(Gparticion->nombre)+5);
@@ -138,8 +138,6 @@ Tarch* mergeLexico(Tparticiones *Gparticion, int cantidad){
 		    }
 	       }
 	
-	       //-------------------------------------------------------------------------
-	       //AAABBBCC
 	       if(strcmp(auxMenor, "\0")==0){
 		    auxMenor = menor;
 		    punteros=NULL;
@@ -179,14 +177,13 @@ Tarch* mergeLexico(Tparticiones *Gparticion, int cantidad){
 	  agregarParticion(nuevoGrupo, archFinal);
 	  nEof=0;
      }//fin del while de todo el grupo de particiones.
-//     free(menor);
-//     free(Eof);
+     free(menor);
+     free(Eof);
 	
-     //for(i=0; i<n;i++) free(archivo[i]);
-     //free(archivo);
+     free(archivo);
     
      for(i=0; i<n;i++) free(palabraAComparar[i]);
-     //free(palabraAComparar);
+     free(palabraAComparar);
     
      eliminarParticiones(Gparticion);
      if(nuevoGrupo->cantidad > 1){

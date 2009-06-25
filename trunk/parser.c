@@ -10,7 +10,7 @@ static struct rb_table *stopWords=NULL;
 
 /* Filtra los caracteres invalidos, devolviendo la longitud de la palabra hasta encontrar
  * el primer caracter invalido */
-int Parser_Caracteres_Invalidos(char* texto, int length) {
+int Parser_Caracteres_Invalidos(unsigned char* texto, int length) {
 
 	int invalido = 0;
 	int i = 0;
@@ -238,7 +238,7 @@ Parser* Parser_Crear(const char* nombre, int tamanioPromedio, int particiones){
      /* Si no existe el arbol de stopWords, lo creo */
      if(stopWords == NULL){
 	  /* Creo un arbol RB */
-	  stopWords = rb_create(comparador, NULL, NULL);
+	  stopWords = rb_create((rb_comparison_func*)comparador, NULL, NULL);
 	  Tarch *archivo = Fopen(ARCHIVO_STOPWORDS, "r");
 	  
 	  /* Inserto los stopwords */

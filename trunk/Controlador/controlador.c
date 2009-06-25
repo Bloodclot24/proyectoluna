@@ -58,8 +58,9 @@ void* distraccion(void* controladorV) {
 	
 	Controlador* controlador= (Controlador*) controladorV; 
 
-    while(controlador->procesando)
-    	mostrarDistraccion(controlador->vista);
+    mostrarDistraccion(controlador->vista);
+	printf("ESPERANDO\n");
+    pthread_cond_wait(&controlador->condition, &controlador->mutex);
 
 	cerrarDistraccion(controlador->vista);
 		
@@ -69,7 +70,8 @@ void* distraccion(void* controladorV) {
 void procesarPalabras(Controlador* controlador) {
 
 	pthread_t threads;
-	controlador->procesando= 1;
+	pthread_mutex_init(&controlador->mutex, NULL);
+	pthread_cond_init(&controlador->condition, NULL); 
 	
 	Datos* datos= (Datos*) malloc(sizeof(Datos));
 	datos->cantMultiplicar= 1;
@@ -205,7 +207,8 @@ void procesarPalabras(Controlador* controlador) {
 	
 		salida = agua(controlador->agua, datos);
 		
-		controlador->procesando= 0;
+		//sleep(5);
+		pthread_cond_signal(&controlador->condition);
 		pthread_join(threads, NULL);
 				
 		if(salida) {

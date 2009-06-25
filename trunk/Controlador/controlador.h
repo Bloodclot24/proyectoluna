@@ -32,6 +32,8 @@ typedef struct Controlador {
      int error;
      Agua* agua;
      int procesando;
+     pthread_mutex_t mutex;
+	 pthread_cond_t condition;
 } Controlador;
 
 /* Crea un controlador */

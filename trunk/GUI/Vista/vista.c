@@ -13,12 +13,27 @@ void crearVista(Vista* vista, Controlador* controlador) {
 void mostrarDistraccion(Vista* vista) {
 	
 	vista->dialog= GTK_WIDGET(gtk_builder_get_object(vista->builder, "dialog_fun"));
+//  	GtkWidget* area= gtk_dialog_get_content_area(GTK_DIALOG(vista->dialog));
+//  	gtk_widget_show_now(area);
+//  	GtkWidget* area2= gtk_dialog_get_action_area(GTK_DIALOG(vista->dialog));
+//  	gtk_widget_show_now(area2);
+//  	GtkWidget* box= GTK_WIDGET(gtk_builder_get_object(vista->builder, "dialog-vbox3"));
+//  	gtk_widget_show_now(box);
+//	GtkWidget* image= GTK_WIDGET(gtk_builder_get_object(vista->builder, "image_fun"));
+//  	gtk_widget_show_now(image);
+//  	GtkWidget* label= GTK_WIDGET(gtk_builder_get_object(vista->builder, "label_fun"));
+//  	gtk_widget_show_now(label);
+
   	gtk_widget_show_now(vista->dialog);
+//  	
+//  	
+//  	GtkWidget* box2= GTK_WIDGET(gtk_builder_get_object(vista->builder, "dialog-vbox3"));
+//  	gtk_widget_show_now(box2);  	
 }
 
 void cerrarDistraccion(Vista* vista) {
 
-	gtk_widget_hide(vista->dialog);	
+	gtk_widget_hide_all(vista->dialog);	
 }
 
 void mostrarNoEncontrado(Vista* vista) {

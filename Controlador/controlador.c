@@ -54,21 +54,26 @@ void mostrar(Controlador* controlador, char* mensaje) {
 		mostrarErrorVista(controlador->vista, mensaje);	 
 }
 
-void* distraccion(void* controlador) {
+void* distraccion(void* controladorV) {
 	
+	Controlador* controlador= (Controlador*) controladorV; 
+
+    while(controlador->procesando)
+    	mostrarDistraccion(controlador->vista);
 	
-	
+	cerrarDistraccion(controlador->vista);
+		
 	return(NULL);
 }
 
 void procesarPalabras(Controlador* controlador) {
 	
-	//pthread_t threads;
-	//pthread_create(&threads, NULL, distraccion, (void*) controlador);
+	pthread_t threads;
+	controlador->procesando= 1;
 	
 	Datos* datos= (Datos*) malloc(sizeof(Datos));
 	datos->cantMultiplicar= 1;
-	datos->cantResultados = 20;
+	datos->cantResultados = RESULTADOS_DEFECTO;
 	datos->lista= Lista_Crear();
 	datos->listaAgregar= Lista_Crear();
 	datos->listaQuitar= Lista_Crear();
@@ -192,18 +197,28 @@ void procesarPalabras(Controlador* controlador) {
 //    }
 	int salida;
 	if(!controlador->error) {
-	     salida = agua(controlador->agua, datos);
-	     //LLAMAR AL MODELOreturn datos;
-	}
-	int i;
-	while(!Lista_EstaVacia(datos->lista)){
-	     char * palabra = Lista_RemoverPrimero(datos->lista);
-	     printf("%s\n", palabra);
-	     //free(palabra);
-
-	}
-    //mostrarDistraccion(controlador->vista);
-    //mostrarNoEncontrado(controlador->vista);
+		pthread_create(&threads, NULL, distraccion, (void*)controlador);
+	
+		//salida = agua(controlador->agua, datos);
+		
+		controlador->procesando= 0;
+		pthread_join(threads, NULL);
+				
+		if(salida) {
+			while(!Lista_EstaVacia(datos->lista)){
+			     char * palabra = Lista_RemoverPrimero(datos->lista);
+			     
+			     if(controlador->console) 
+			     	mostrarPalabraShell(controlador->shell, palabra);	
+			     //printf("%s\n", palabra);
+			     else
+			     	mostrarPalabraVista(controlador->vista, palabra);	
+		
+			     //free(palabra);
+			}
+		} else
+			mostrarNoEncontrado(controlador->vista);
+	}	
 }
 
 void mostrarPalabraResultados(Controlador* controlador, Lista* lista) {

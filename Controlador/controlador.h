@@ -13,6 +13,8 @@
 #define BASE "wiki"
 #endif
 
+#define RESULTADOS_DEFECTO 20
+
 typedef struct Datos {
 	int cantResultados;
 	int cantMultiplicar;
@@ -27,6 +29,7 @@ typedef struct Controlador {
      Shell* shell;
      int error;
      Agua* agua;
+     int procesando;
 } Controlador;
 
 /* Crea un controlador */

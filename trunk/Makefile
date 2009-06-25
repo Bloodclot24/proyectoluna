@@ -101,7 +101,7 @@ endif
 
 # Si no especifica archivos, tomo todos.
 fuentes_procesador = agua_procesador.c parser.c rb.c archivo.c particiones.c lista.c nodo.c pila.c debug.c ReplacementSelection.c merge.c matrizBayes.c
-fuentes_ppal = agua.c main.c Controlador/controlador.c GUI/*/*.c archivo.c matrizBayes.c lista.c nodo.c
+fuentes_ppal = agua.c main.c Controlador/controlador.c GUI/*/*.c archivo.c matrizBayes.c lista.c nodo.c feedBack.c
 occ := $(CC)
 ocxx := $(CXX)
 orm := $(RM)

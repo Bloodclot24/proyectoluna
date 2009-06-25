@@ -14,6 +14,7 @@ void crearControlador(Controlador* controlador, char* argv) {
 		controlador->console= 1;
 	}
 	controlador->agua = comenzar_agua("wiki");
+	controlador->error = 1;
 }
 
 void correr(Controlador* controlador) {
@@ -222,7 +223,7 @@ void procesarPalabras(Controlador* controlador) {
 
 			     printf("%s\n", palabra);
 		
-			     //free(palabra);
+			     free(palabra);
 			}
 		} else
 			mostrarNoEncontrado(controlador->vista);

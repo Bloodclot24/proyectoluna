@@ -3,6 +3,7 @@
 
 #include "archivo.h"
 #include <stdint.h>
+#include <stdlib.h>
 #include <math.h>
 
 #define MATRIZ1 "_matriz1"
@@ -41,6 +42,18 @@ int armarMatriz(Tarch* archAuxiliar, char* prefijo);
  * concentracion de Dirichlet (generalmente dParam=2) */
 HiperParametros* BSParam(Matriz *X, double dParam);
 
+/* Carga la matriz principal */
+Matriz* cargarMatriz(char* prefijo);
+
+/* carga dos vectores de hiperparametros */
+HiperParametros* cargarHParam(Matriz* X, char* prefijo);
+
+/* Carga un archivo de lexico */
+Tarch* cargarLexico(char* prefijo);
+
+/* Carga un archivo de punteros al lexico */
+Tarch* cargarPLexico(char* prefijo);
+
 /* Calcula el puntaje de cada articulo segun el algoritmo de sets
  * bayesianos  */
 double* BSets(Matriz *X, Query* q, HiperParametros *param);
@@ -48,5 +61,8 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param);
 /* Arma un Query agregando el termino especificado. Si query es NULL,
  * devuelve un nuevo Query, si no, agrega un nuevo termino. */
 Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punterosLexico);
+
+/* Libera la memoria utilizada por el query */
+void DestruirQuery(Query* q);
 
 #endif /*MATRIZBAYES_H_*/

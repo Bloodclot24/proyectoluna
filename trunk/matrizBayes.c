@@ -128,6 +128,16 @@ Matriz* cargarMatriz(char* prefijo){
      X->inicioFila = Fopen(nombre,"r");
      free(nombre);
 
+     if(X->elementos==NULL || X->columnas == NULL || X->elementos == NULL){
+	  Fclose(X->elementos);
+	  Fclose(X->columnas);
+	  Fclose(X->elementos);
+	  free(X);
+	  X=NULL;
+     }
+     X->numFilas = 4224832; 
+     X->numColumnas = 323415; 
+
      return X;
 }
 
@@ -164,7 +174,7 @@ Tarch* cargarPLexico(char* prefijo){
      return arch1;
 }
 
-int compararInt(void* a, void* b){
+int compararInt(const void* a, const void* b){
      int aa=(int)a;
      int bb=(int)b;
      if(aa < bb)
@@ -371,3 +381,24 @@ Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punte
 
      return query;
 } 
+
+void DestruirQuery(Query* q){
+     if(q != NULL){
+	  if(q->elementos != 0 && q->query != NULL){
+	       q->elementos = 0;
+	       free(q);
+	       q=NULL;
+	  }
+	  if(q->cantidadSacar != 0 && q->sacar != NULL){
+	       q->cantidadSacar = 0;
+	       free(q->sacar);
+	       q->sacar = NULL;
+	  }
+	  if(q->cantidadAgregar != 0 && q->agregar != NULL){
+	       q->cantidadAgregar = 0;
+	       free(q->agregar);
+	       q->agregar = NULL;
+	  }
+
+     }
+}

@@ -2,6 +2,8 @@
 #include "matrizBayes.h"
 #include "archivo.h"
 #include "particiones.h"
+#include "ReplacementSelection.h"
+#include "merge.h"
 
 #include <errno.h>
 
@@ -32,7 +34,7 @@ base de datos.\n");
      if(archivo == NULL){
 	  char* error =strerror(errno);
 	  printf("Error con el arrchivo %s: %s.\n", argv[1], error);
-	  return;
+	  return -1;
      }
 
      printf("Armando la matriz ...\n");

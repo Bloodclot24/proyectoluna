@@ -2,8 +2,10 @@
 #
 # Creado: jue abr 15 15:34:19 ART 2004
 #
-# Copyleft 2004 - Leandro Lucarella, Bajo licencia GPL [http://www.gnu.org/]
+# Ultima modificacion: jue jun 25 11:23:42 ART 2009
 #
+# Copyleft 2004 - Leandro Lucarella, Bajo licencia GPL [http://www.gnu.org/]
+# 
 
 # CONFIGURACION
 ################
@@ -12,25 +14,23 @@
 target_ppal = agua
 target_procesador = agua_procesador
 
+ifndef PREFIX
+PREFIX=/usr/local
+endif
+
 # Si usa funciones de math.h, descomentá (quitale el '#' a) la siguiente línea.
 math = si
 
 # Si usa pthreads, descomentá (quitale el '#' a) la siguiente línea.
 pthreads = si
 
-# Si usa gthreads, descomentá (quitale el '#' a) la siguiente línea.
-#gthreads = si
-
 # Si es un programa GTK+, descomentá (quitale el '#' a) la siguiente línea.
 gtk = si
+
 xml = si
-# Si es un programa gtkmm, descomentá (quitale el '#' a) la siguiente línea.
-#gtkmm = si
 
 # Descomentar si se quiere ver como se invoca al compilador
 #verbose = si
-
-
 
 # CONFIGURACION "AVANZADA"
 ###########################
@@ -65,24 +65,11 @@ CFLAGS += $(shell pkg-config --cflags gtk+-2.0)
 LDFLAGS += $(shell pkg-config --libs gtk+-2.0)
 endif
 
-# Agrego flags y libs de GTK+ de ser necesario.
-ifdef gtkmm
-CFLAGS += $(shell pkg-config --cflags gtkmm-2.4)
-LDFLAGS += $(shell pkg-config --libs gtkmm-2.4)
-endif
-
-# Agrego flags y libs de gthreads de ser necesario.
-ifdef gthreads
-CFLAGS += $(shell pkg-config --cflags gthread-2.0)
-LDFLAGS += $(shell pkg-config --libs gthread-2.0)
-endif
-
 # Agrego flags y libs de libxml de ser necesario.
 ifdef xml
 CFLAGS += $(shell pkg-config --cflags libxml-2.0)
 LDFLAGS += $(shell pkg-config --libs libxml-2.0)
 endif
-
 
 # Linkeo con libm de ser necesario.
 ifdef math
@@ -113,7 +100,6 @@ LD = $(CXX)
 endif
 
 # Si no especifica archivos, tomo todos.
-fuentes ?= $(wildcard *.$(extension))
 fuentes_procesador = agua_procesador.c parser.c rb.c archivo.c particiones.c lista.c nodo.c pila.c debug.c ReplacementSelection.c merge.c matrizBayes.c
 fuentes_ppal = agua.c main.c Controlador/controlador.c GUI/*/*.c archivo.c matrizBayes.c lista.c nodo.c
 occ := $(CC)
@@ -137,12 +123,30 @@ endif
 
 all: procesador principal
 
-
 procesador: $(fuentes_procesador)
 	$(LD) $(LDFLAGS)  $(CFLAGS) $(fuentes_procesador) $(LOADLIBS) $(LDLIBS) -o $(target_procesador)
 
 principal: $(fuentes_ppal)
 	$(LD) $(LDFLAGS) $(CFLAGS) $(fuentes_ppal) $(LOADLIBS) $(LDLIBS) -o $(target_ppal)
+
+install: $(all)
+	mkdir -p $(PREFIX)/bin/
+	mkdir -p $(PREFIX)/bin/GUI/Vista/
+	cp GUI/Vista/*.glade $(PREFIX)/bin/GUI/Vista/
+	cp GUI/Vista/*.png $(PREFIX)/bin/GUI/Vista/
+	cp GUI/Vista/*.gif $(PREFIX)/bin/GUI/Vista/
+	cp $(target_procesador) $(PREFIX)/bin/
+	cp $(target_ppal) $(PREFIX)/bin/
+
+uninstall:
+	@if [ -r $(PREFIX)/bin/$(target_ppal) ]; \
+	then \
+		rm $(PREFIX)/bin/$(target_ppal); \
+	fi
+	@if [ -r $(PREFIX)/bin/$(target_procesador) ]; \
+	then \
+		rm $(PREFIX)/bin/$(target_procesador); \
+	fi
 
 
 clean:

@@ -1,9 +1,4 @@
-#include "archivo.h"
-#include "matrizBayes.h"
-#include "feedBack.h"
-#include "lista.h"
 #include "agua.h"
-#include "Controlador/controlador.h"
 
 int comparar(const void* numero1, const void* numero2){
      const double** n1 = numero1;

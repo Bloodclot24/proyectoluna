@@ -2,6 +2,11 @@
 #define AGUA_H
 
 #include "matrizBayes.h"
+#include "feedBack.h"
+#include "lista.h"
+#include "Controlador/controlador.h"
+#include "matrizBayes.h"
+#include "archivo.h"
 
 typedef struct Agua{
      Matriz *X;

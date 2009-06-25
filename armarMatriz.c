@@ -23,11 +23,9 @@ los archivos resultantes.\n");
      Matriz *X;
      armarMatriz(archivo, argv[2]);
      X = cargarMatriz(argv[2]);
-     X->numFilas = 4224832;
-     X->numColumnas = 323415;
 
      printf("Calculando los hiperparametros ...\n");
-     HiperParametros *H = BSParam(X,1);
+     HiperParametros *H = BSParam(X,2);
 
      char *nombre = malloc(strlen(argv[2])+strlen(HIPERPARAM)+1);
      nombre[0]=0;

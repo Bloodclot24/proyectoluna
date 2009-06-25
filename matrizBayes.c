@@ -14,7 +14,7 @@ int preprocesarRegistro(void* registro){
      }
 
      promedio /= cantidadDoc;
-     return (int) (promedio);
+     return 1; //(int) (promedio);
 }
 
 static char* strcat2(char* a, char* b){
@@ -42,7 +42,7 @@ int armarMatriz(Tarch* archAuxiliar, char* prefijo){
      arch3 = Fopen(nombre,"w");
      free(nombre);
 
-     nombre = strcat2(prefijo,MATRIZ3);
+     nombre = strcat2(prefijo,MATRIZ4);
      arch4 = Fopen(nombre,"w");
      free(nombre);
      
@@ -113,10 +113,16 @@ int armarMatriz(Tarch* archAuxiliar, char* prefijo){
 	  }
      }
      Fwrite(arch3, &comienzo, sizeof(int));
+     numColumnas ++;
+     
+     Fwrite(arch4, &numFilas, sizeof(numFilas));
+     Fwrite(arch4, &numColumnas, sizeof(numColumnas));
+     
 
      Fclose(arch1);
      Fclose(arch2);
      Fclose(arch3);
+     Fclose(arch4);
      Fclose(lexico);
      Fclose(punterosLexico);
 
@@ -141,16 +147,23 @@ Matriz* cargarMatriz(char* prefijo){
      X->inicioFila = Fopen(nombre,"r");
      free(nombre);
 
-     if(X->elementos==NULL || X->columnas == NULL || X->elementos == NULL){
+     nombre = strcat2(prefijo,MATRIZ4);
+     Tarch *dimensiones = Fopen(nombre,"r");
+     free(nombre);
+
+
+     if(X->elementos==NULL || X->columnas == NULL || X->elementos == NULL || dimensiones == NULL){
 	  Fclose(X->elementos);
 	  Fclose(X->columnas);
 	  Fclose(X->elementos);
+	  Fclose(dimensiones);
 	  free(X);
 	  X=NULL;
      }
      else{
-	  X->numFilas = 4224832; 
-	  X->numColumnas = 323415; 
+	  Fread(dimensiones, &(X->numFilas), sizeof(X->numFilas));
+	  Fread(dimensiones, &(X->numColumnas), sizeof(X->numColumnas));
+	  Fclose(dimensiones);
      }
      return X;
 }
@@ -335,11 +348,10 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
      return s;
 }
 
-Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punterosLexico){
+Query* ArmarQuery(Query* query, char* termino, Tarch* lexico, Tarch* punterosLexico){
 
      Frewind(lexico);
      Frewind(punterosLexico);
-     
      
      if(query == NULL){
 	  query = (Query*)malloc(sizeof(Query));
@@ -357,6 +369,10 @@ Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punte
      uint32_t fin = Fsize(punterosLexico)/sizeof(uint32_t);
      uint32_t posicionLexico=0;
      char* palabra;
+
+     int i;
+     for(i=0;termino[i]!= 0;i++)
+	  termino[i] = tolower(termino[i]);
      
      uint32_t medio;
 

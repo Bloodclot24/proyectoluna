@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
+#include <ctype.h>
 
 #define MATRIZ1 "_matriz1"
 #define MATRIZ2 "_matriz2"
@@ -61,7 +62,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param);
 
 /* Arma un Query agregando el termino especificado. Si query es NULL,
  * devuelve un nuevo Query, si no, agrega un nuevo termino. */
-Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punterosLexico);
+Query* ArmarQuery(Query* query, char* termino, Tarch* lexico, Tarch* punterosLexico);
 
 /* Libera la memoria utilizada por el query */
 void DestruirQuery(Query* q);

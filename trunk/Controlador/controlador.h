@@ -7,7 +7,7 @@
 #include "../lista.h"
 #include "../GUI/Vista/vista.h"
 #include "../GUI/Shell/shell.h"
-#include "../agua.h"
+
 
 #ifndef BASE
 #define BASE "wiki"
@@ -22,6 +22,8 @@ typedef struct Datos {
 	Lista* listaAgregar;
 	Lista* listaQuitar;
 } Datos;
+
+#include "../agua.h"
 
 typedef struct Controlador {
      int console;

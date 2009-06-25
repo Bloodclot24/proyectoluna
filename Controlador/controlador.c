@@ -180,33 +180,28 @@ void procesarPalabras(Controlador* controlador) {
 	  mostrar(controlador, "Ingreso Inválido");
 	
      int salida;
-		
+
      if(!controlador->console)
 	  limpiarEntrys(controlador->vista);
 	
      if(!controlador->error && controlador->agua != NULL) {
 
-	  void* punteros[2] = {controlador,datos};
-	  printf("busco\n");
 	  salida = agua(controlador->agua, datos);
-	  printf("\nlisto");
 
 	  if(salida) {
 	       while(!Lista_EstaVacia(datos->lista)){
 		    char * palabra = Lista_RemoverPrimero(datos->lista);
-			     
-		    if(controlador->console)
-			 mostrarPalabraShell(controlador->shell, palabra);	
-		    else
-			 mostrarPalabraVista(controlador->vista, palabra);	
 
-		    printf("%s\n", palabra);
-		
-		    //free(palabra);
+		    if(controlador->console)
+			 mostrarPalabraShell(controlador->shell, palabra);
+		    else
+			 mostrarPalabraVista(controlador->vista, palabra);
+
+		    free(palabra);
 	       }
 	  } else
 	       mostrarNoEncontrado(controlador->vista);
-     }	
+     }
 }
 
 void mostrarPalabraResultados(Controlador* controlador, Lista* lista) {

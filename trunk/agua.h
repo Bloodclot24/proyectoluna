@@ -1,12 +1,8 @@
 #ifndef AGUA_H
 #define AGUA_H
 
-#include "matrizBayes.h"
-#include "feedBack.h"
-#include "lista.h"
-#include "Controlador/controlador.h"
-#include "matrizBayes.h"
 #include "archivo.h"
+#include "matrizBayes.h"
 
 typedef struct Agua{
      Matriz *X;
@@ -14,6 +10,11 @@ typedef struct Agua{
      Tarch *lexico;
      Tarch *punterosLexico;
 }Agua;
+
+#include "feedBack.h"
+#include "lista.h"
+#include "Controlador/controlador.h"
+#include "matrizBayes.h"
 
 int comparar(const void* numero1, const void* numero2);
 

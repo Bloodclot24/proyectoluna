@@ -67,7 +67,6 @@ int compararTerminos(const void* cadena1, const void* cadena2, const void* param
 }
 
 Tarch* mergeLexico(Tparticiones *Gparticion, int cantidad){
-//     if(cantidad <= 1) cantidad = 2; /* No se puede hacer un merge con una sola particion */
 
      char* nuevoNombre;
      nuevoNombre = malloc(strlen(Gparticion->nombre)+5);

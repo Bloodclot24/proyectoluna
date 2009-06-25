@@ -12,14 +12,13 @@ void crearVista(Vista* vista, Controlador* controlador) {
 
 void mostrarDistraccion(Vista* vista) {
 	
-	GtkWidget *dialog= GTK_WIDGET(gtk_builder_get_object(vista->builder, "dialog_fun"));
-  	gtk_dialog_run(GTK_DIALOG(dialog));
+	vista->dialog= GTK_WIDGET(gtk_builder_get_object(vista->builder, "dialog_fun"));
+  	gtk_widget_show_now(vista->dialog);
 }
 
 void cerrarDistraccion(Vista* vista) {
 
-	GtkWidget *dialog= GTK_WIDGET(gtk_builder_get_object(vista->builder, "dialog_fun"));
-	gtk_widget_hide(dialog);	
+	gtk_widget_hide(vista->dialog);	
 }
 
 void mostrarNoEncontrado(Vista* vista) {
@@ -117,5 +116,13 @@ void limpiarEntrys(Vista* vista) {
 	
 	mostrarErrorVista(vista, "");          
 }	
+
+void limpiarTreeView(Vista* vista) {
+
+	GtkListStore *listStore;
+	listStore= GTK_LIST_STORE(gtk_builder_get_object(vista->builder, "liststore_results"));
+	gtk_list_store_clear(listStore);	
+}
+
 
 void destruirVista(Vista* vista) { }

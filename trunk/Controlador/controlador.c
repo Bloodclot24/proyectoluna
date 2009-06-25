@@ -60,14 +60,14 @@ void* distraccion(void* controladorV) {
 
     while(controlador->procesando)
     	mostrarDistraccion(controlador->vista);
-	
+
 	cerrarDistraccion(controlador->vista);
 		
 	return(NULL);
 }
 
 void procesarPalabras(Controlador* controlador) {
-	
+
 	pthread_t threads;
 	controlador->procesando= 1;
 	
@@ -196,6 +196,10 @@ void procesarPalabras(Controlador* controlador) {
 //    	Lista_RemoverPrimero(datos->listaQuitar);
 //    }
 	int salida;
+		
+	if(!controlador->console)
+		limpiarEntrys(controlador->vista);
+	
 	if(!controlador->error) {
 		pthread_create(&threads, NULL, distraccion, (void*)controlador);
 	

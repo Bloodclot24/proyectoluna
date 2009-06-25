@@ -8,6 +8,7 @@
 
 typedef struct Vista {
      GtkBuilder* builder;
+     GtkWidget *dialog;
      struct Controlador* controlador;
 } Vista;
 
@@ -42,6 +43,9 @@ void mostrarPalabraVista(Vista* vista, char* palabra);
 
 /* Muestra un mensaje de error */
 void mostrarErrorVista(Vista* vista, char* mensaje);	
+
+/* Limpia el treeview*/
+void limpiarTreeView(Vista* vista);
 
 /* Limpia los entry texts*/
 void limpiarEntrys(Vista* vista);	

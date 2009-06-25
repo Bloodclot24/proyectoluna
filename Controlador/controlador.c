@@ -1,28 +1,44 @@
 #include "controlador.h"
 
-void crearControlador(Controlador* controlador, char* argv) {
-	
+void crearControlador(Controlador* controlador, int argc, char** argv) {
      char vista[] = "-vista";
-	
-     if(!argv) {
+
+     controlador->agua = comenzar_agua("wiki");
+
+     controlador->batch = NULL;
+     if(argc < 2) {
 	  controlador->shell= (Shell*) malloc(sizeof(Shell));
 	  crearShell(controlador->shell, controlador);
-	  controlador->console= 1;
-     } else if(strcmp(argv, vista)==0) {
+	  controlador->console = 1;
+     } else if(strcmp(argv[1], vista)==0){
 	  controlador->vista= (Vista*) malloc(sizeof(Vista));
 	  crearVista(controlador->vista, controlador);
-	  controlador->console= 0;	
+	  controlador->console= 0;
      }
-     controlador->agua = comenzar_agua("wiki");
+     else{
+	  controlador->shell= (Shell*) malloc(sizeof(Shell));
+	  crearShell(controlador->shell, controlador);
+	  controlador->console = 1;
+	  int i;
+	  char *palabra=malloc(1);
+	  palabra[0]=0;
+	  for(i=1;i<argc;i++){
+	       palabra = realloc(palabra, strlen(palabra)+strlen(argv[i])+2);
+	       strcat(palabra,argv[i]);
+	       strcat(palabra," ");
+	  }
+	  controlador->batch = palabra;
+	  procesarPalabras(controlador);
+	  free(palabra);
+     }
      controlador->error = 1;
 }
 
 void correr(Controlador* controlador) {
-	
      if(controlador->console)
-	  correrShell(controlador->shell);		
+	  correrShell(controlador->shell);
      else
-	  correrVista(controlador->vista);	
+	  correrVista(controlador->vista);
 }
 
 void parsearPalabra(char* palabras, Lista* lista, Controlador* controlador) {
@@ -94,8 +110,12 @@ void procesarPalabras(Controlador* controlador) {
      controlador->error= 0;
 		
      char* palabras= NULL;
-     if(controlador->console)
-	  palabras= obtenerPalabrasShell(controlador->shell);		
+     if(controlador->console){
+	  if(!controlador->batch)
+	       palabras= obtenerPalabrasShell(controlador->shell);
+	  else
+	       palabras = controlador->batch;
+     }
      else
 	  palabras= obtenerPalabrasVista(controlador->vista);	
 	
@@ -123,37 +143,30 @@ void procesarPalabras(Controlador* controlador) {
 			      Lista_Insertar(datos->lista, palabra);
 		 				 				
 			 } else if(strcmp(palabra, "-a") == 0) {
-			      printf("AGREGAR -a\n");
 			      agregar= 1;
 			      eliminar= 0;
 			      multiplicar= 0;
 						
 			 } else if(strcmp(palabra, "-d") == 0) {
-			      printf("QUITAR -d\n");
 			      agregar= 0;
 			      eliminar= 1;
 			      multiplicar= 0;
 						
 			 } else if(strcmp(palabra, "-m") == 0) {
-			      printf("MULTIPLICAR -m\n");
 			      agregar= 0;
 			      eliminar= 0;
 			      multiplicar= 1;
 		 			
 			 } else if(agregar) {
-			      printf("AGREGAR\n");
 			      Lista_Insertar(datos->listaAgregar, palabra);
 					
 			 } else if(eliminar) {
-			      printf("QUITAR\n");
 			      Lista_Insertar(datos->listaQuitar, palabra);	
 			 }
 		    } else if(multiplicar) {
-			 printf("MULTIPLICAR %d\n", multiplicar);
 			 datos->cantMultiplicar= aInt;
 			 multiplicar= 0; 			
 		    } else {
-			 printf("RESTO\n");
 			 datos->cantResultados= aInt;
 		    }		
 	       }
@@ -184,7 +197,7 @@ void procesarPalabras(Controlador* controlador) {
      if(!controlador->console)
 	  limpiarEntrys(controlador->vista);
 	
-     if(!controlador->error && controlador->agua != NULL) {
+     if(!controlador->error && controlador->agua != NULL){
 
 	  salida = agua(controlador->agua, datos);
 

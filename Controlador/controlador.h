@@ -32,12 +32,13 @@ typedef struct Controlador {
      int error;
      Agua* agua;
      int procesando;
+     char* batch;
      pthread_mutex_t mutex;
 	 pthread_cond_t condition;
 } Controlador;
 
 /* Crea un controlador */
-void crearControlador(Controlador* controlador, char* argv);
+void crearControlador(Controlador* controlador, int argc, char** argv);
 
 /* Corre la aplicacion */
 void correr(Controlador* controlador);

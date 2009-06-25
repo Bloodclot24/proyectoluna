@@ -67,4 +67,8 @@ Query* ArmarQuery(Query* query, char* termino, Tarch* lexico, Tarch* punterosLex
 /* Libera la memoria utilizada por el query */
 void DestruirQuery(Query* q);
 
+/* funcion auxiliar que concatena dos strings */
+char* strcat2(char* a, char* b);
+
+
 #endif /*MATRIZBAYES_H_*/

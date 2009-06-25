@@ -17,7 +17,7 @@ int preprocesarRegistro(void* registro){
      return 1; //(int) (promedio);
 }
 
-static char* strcat2(char* a, char* b){
+char* strcat2(char* a, char* b){
      char* resultado = malloc(strlen(a)+strlen(b)+1);
      resultado[0] = 0;
      strcat(resultado, a);

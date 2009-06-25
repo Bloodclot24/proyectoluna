@@ -1,6 +1,10 @@
 #ifndef PARSER_H_INCLUDED
 #define PARSER_H_INCLUDED
 
+#ifndef BASE
+#define BASE "wiki"
+#endif
+
 #include "particiones.h"
 #include "archivo.h"
 

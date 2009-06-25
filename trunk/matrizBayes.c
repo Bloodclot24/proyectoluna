@@ -234,6 +234,10 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 
      memset(c,0,sizeof(double)*X->numColumnas);
 
+     Frewind(X->elementos);
+     Frewind(X->columnas);
+     Frewind(X->inicioFila);
+
      int i,j;
      int fila=0;
      int comienzoFila=0;
@@ -268,7 +272,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 	  for(j=0;j<elementosFila;j++){
 	       Fread(X->columnas, &columna, sizeof(int));
 	       Fread(X->elementos, &elem, sizeof(int));
-	       //elem=1;
+	       elem=1;
 	       c[columna] += elem;
 	  }
 	  repetida = 1;	  
@@ -300,7 +304,7 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 
 	  for(j=0;j<elementosFila;j++){
 	       Fread(X->elementos, &elem, sizeof(int));
-	       //elem=1;
+	       elem=1;
 	       Fread(X->columnas, &columna, sizeof(int));
 	       s[i] += w[columna]*elem;
 	  }
@@ -311,6 +315,11 @@ double* BSets(Matriz *X, Query* q, HiperParametros *param){
 }
 
 Query* ArmarQuery(Query* query, const char* termino, Tarch* lexico, Tarch* punterosLexico){
+
+     Frewind(lexico);
+     Frewind(punterosLexico);
+     
+     
      if(query == NULL){
 	  query = (Query*)malloc(sizeof(Query));
 	  query->query = NULL;

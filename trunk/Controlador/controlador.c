@@ -13,6 +13,7 @@ void crearControlador(Controlador* controlador, char* argv) {
 		crearShell(controlador->shell, controlador);
 		controlador->console= 1;
 	}
+	controlador->agua = comenzar_agua("wiki");
 }
 
 void correr(Controlador* controlador) {
@@ -66,7 +67,8 @@ void procesarPalabras(Controlador* controlador) {
 	//pthread_create(&threads, NULL, distraccion, (void*) controlador);
 	
 	Datos* datos= (Datos*) malloc(sizeof(Datos));
-	datos->cantMultiplicar= 0;
+	datos->cantMultiplicar= 1;
+	datos->cantResultados = 20;
 	datos->lista= Lista_Crear();
 	datos->listaAgregar= Lista_Crear();
 	datos->listaQuitar= Lista_Crear();
@@ -188,11 +190,18 @@ void procesarPalabras(Controlador* controlador) {
 //     	printf("%s\n", palabra);	 	 
 //    	Lista_RemoverPrimero(datos->listaQuitar);
 //    }
-     
-    if(!controlador->error) {
-		//LLAMAR AL MODELOreturn datos;
-    }
-    
+	int salida;
+	if(!controlador->error) {
+	     salida = agua(controlador->agua, datos);
+	     //LLAMAR AL MODELOreturn datos;
+	}
+	int i;
+	while(!Lista_EstaVacia(datos->lista)){
+	     char * palabra = Lista_RemoverPrimero(datos->lista);
+	     printf("%s\n", palabra);
+	     //free(palabra);
+
+	}
     //mostrarDistraccion(controlador->vista);
     //mostrarNoEncontrado(controlador->vista);
 }

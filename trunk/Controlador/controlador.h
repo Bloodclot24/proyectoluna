@@ -7,6 +7,11 @@
 #include "../lista.h"
 #include "../GUI/Vista/vista.h"
 #include "../GUI/Shell/shell.h"
+#include "../agua.h"
+
+#ifndef BASE
+#define BASE "wiki"
+#endif
 
 typedef struct Datos {
 	int cantResultados;
@@ -21,6 +26,7 @@ typedef struct Controlador {
      Vista* vista;
      Shell* shell;
      int error;
+     Agua* agua;
 } Controlador;
 
 /* Crea un controlador */

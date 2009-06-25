@@ -12,45 +12,22 @@ void crearVista(Vista* vista, Controlador* controlador) {
 
 void mostrarDistraccion(Vista* vista) {
 	
-	GtkWidget *dialog;
-   	dialog= GTK_WIDGET(gtk_builder_get_object(vista->builder, "dialog_fun"));
-   	gtk_widget_show_all(dialog); 
+	GtkWidget *dialog= GTK_WIDGET(gtk_builder_get_object(vista->builder, "dialog_fun"));
   	gtk_dialog_run(GTK_DIALOG(dialog));
-  	//gtk_widget_destroy(dialog);
+}
+
+void cerrarDistraccion(Vista* vista) {
+
+	GtkWidget *dialog= GTK_WIDGET(gtk_builder_get_object(vista->builder, "dialog_fun"));
+	gtk_widget_hide(dialog);	
 }
 
 void mostrarNoEncontrado(Vista* vista) {
 
 	GtkWidget *dialog;
    	dialog= GTK_WIDGET(gtk_builder_get_object(vista->builder, "dialog_not_found"));
-   	gtk_widget_show_all(dialog); 
   	gtk_dialog_run(GTK_DIALOG(dialog));
-  	gtk_widget_destroy(dialog);
-
-//	GtkWidget *dialog= gtk_dialog_new();
-//	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-//	gtk_window_set_default_size(GTK_WINDOW(dialog), 250, 250);
-//	gtk_window_set_title(GTK_WINDOW(dialog), "Error 404");
-//
-//	GtkWidget *vbox= gtk_dialog_get_content_area(GTK_DIALOG(dialog));    
-//	GtkWidget *hbox= gtk_hbox_new(FALSE, 0);	
-//	gtk_box_pack_start_defaults(GTK_BOX(vbox), hbox);
-//	
-//	//imagen
-//	GtkWidget *image= gtk_image_new();
-//	gtk_image_set_from_file(GTK_IMAGE(image), "linux_not_found.png");
-//	
-//	gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, FALSE);
-//		
-//	//label	
-//	GtkWidget *label= gtk_label_new (NULL);
-//	gchar* name= (gchar*)"<b> No se han encontrado resultados. Intente otra consulta. </b>";
-//    gtk_label_set_markup(GTK_LABEL(label), name);
-//    gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, FALSE);
-//	
-//	gtk_widget_show_all(dialog); 
-//  	gtk_dialog_run(GTK_DIALOG(dialog));
-//  	gtk_widget_destroy(dialog);
+  	gtk_widget_hide(dialog);
 }
 
 void connect_accept(GtkWidget *widget, Vista* vista) {
@@ -68,8 +45,7 @@ void correrVista(Vista* vista) {
 	GtkWidget  *window;
 
    	window= GTK_WIDGET(gtk_builder_get_object(vista->builder, "window"));
-   	gtk_widget_show_all(window);
-   
+   	
    	gtk_builder_connect_signals(vista->builder, NULL);
    	
    	g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -81,8 +57,8 @@ void correrVista(Vista* vista) {
 	GtkWidget  *buttonClear;
    	buttonClear= GTK_WIDGET(gtk_builder_get_object(vista->builder, "button_clear"));
    	g_signal_connect(G_OBJECT(buttonClear), "clicked", G_CALLBACK(connect_clear), vista);
-	
-   	
+
+   	gtk_widget_show_all(window);
    	gtk_main();
 }
 

@@ -19,6 +19,9 @@ void crearVista(Vista* vista, struct Controlador* controlador);
 /* Mostrar ventana distraccion */
 void mostrarDistraccion(Vista* vista);
 
+/* Cierra ventana distraccion */
+void cerrarDistraccion(Vista* vista);
+
 /* Mostrar ventana de no encontrado */
 void mostrarNoEncontrado(Vista* vista);
 

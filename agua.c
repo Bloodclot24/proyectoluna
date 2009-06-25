@@ -1,8 +1,8 @@
 #include "agua.h"
 
 int comparar(const void* numero1, const void* numero2){
-     const double** n1 = numero1;
-     const double** n2 = numero2;
+     const double const* const* n1 = numero1;
+     const double const* const* n2 = numero2;
 
      if((**n1) > (**n2))
 	  return -1;
@@ -16,13 +16,26 @@ Agua* comenzar_agua(char* prefijo){
      Agua *agua = (Agua*)malloc(sizeof(Agua));
      
      agua->X = cargarMatriz(prefijo);
-     agua->X->numFilas = 4224832;
-     agua->X->numColumnas = 323415;
 
-     agua->H = cargarHParam(agua->X, prefijo);
+     if(agua->X!=NULL){
+	  agua->H = cargarHParam(agua->X, prefijo);
+	  if( agua->H!= NULL){
+	       agua->lexico = cargarLexico(prefijo);
+	       agua->punterosLexico = cargarPLexico(prefijo);
 
-     agua->lexico = cargarLexico(prefijo);
-     agua->punterosLexico = cargarPLexico(prefijo);
+	       if(agua->lexico == NULL || agua->punterosLexico == NULL){
+		    Fclose(agua->lexico);
+		    Fclose(agua->punterosLexico);
+		    free(agua->X);
+		    agua->X=NULL;
+		    free(agua->H->alpha);
+		    free(agua->H->beta);
+		    agua->H=NULL;
+		    free(agua);
+		    agua = NULL;
+	       }
+	  }
+     }
      
      return agua;
 }
@@ -40,7 +53,6 @@ int agua(Agua* agua, Datos* datos){
 //     guardarConsulta(q);
      
      double* resultado = BSets(agua->X,q,agua->H);
-     
      double** ordenado = malloc(agua->X->numFilas*sizeof(double*));
 
      for(i=0;i<agua->X->numFilas;i++){
@@ -61,6 +73,7 @@ int agua(Agua* agua, Datos* datos){
      }
 
      free(ordenado);
-     free(q);
+     DestruirQuery(q);
+     free(resultado);
      return 1;
 }

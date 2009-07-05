@@ -55,9 +55,10 @@ int buscarConsulta(Query* query){
 		/*leo la cantidad de terminos de la consulta*/
 		Fread(archivo,&cantidadTerminos,sizeof(int));
 		if(cantidadTerminos == query->elementos){
-			while((i <= cantidadTerminos) && (!distintos)){
+			while((i < cantidadTerminos) && (!distintos)){
 				Fread(archivo,&numTermino,sizeof(int));
-				if(numTermino != query->query[i]) distintos = 1;
+				if(numTermino != query->query[i])
+				     distintos = 1;
 				i++;
 			}
 			if(!distintos){ 
